@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2C8C3D0B-5A2C-4697-BE07-91C076656D1C</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FDC</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6eab1321-8f8f-466d-9305-a268e3d169db++505</key>
+		<string>http://code.taobao.org/svn/risapp_ios/trunk</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FDC.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6eab1321-8f8f-466d-9305-a268e3d169db++505</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>6eab1321-8f8f-466d-9305-a268e3d169db++505</key>
+		<string>http://code.taobao.org/svn/risapp_ios</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://code.taobao.org/svn/risapp_ios/trunk/FDC.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6eab1321-8f8f-466d-9305-a268e3d169db++505</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6eab1321-8f8f-466d-9305-a268e3d169db++505</string>
+			<key>IDESourceControlWCCName</key>
+			<string>trunk</string>
+		</dict>
+	</array>
+</dict>
+</plist>

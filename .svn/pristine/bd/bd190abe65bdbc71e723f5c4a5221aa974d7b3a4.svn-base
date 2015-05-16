@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="120" id="KGk-i7-Jjw" customClass="SiginOverTimeTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sx8-UO-yE1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vFV-7W-b54">
+                                <rect key="frame" x="277" y="77" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="35" id="360-2S-09d"/>
+                                    <constraint firstAttribute="height" constant="35" id="Z3L-Vz-Rd8"/>
+                                </constraints>
+                                <state key="normal" image="button_message.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendMessageAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ge8-40-LQA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FoB-48-AMg">
+                                <rect key="frame" x="277" y="30" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="d25-ei-fXG"/>
+                                    <constraint firstAttribute="width" constant="35" id="zNU-7Z-8xC"/>
+                                </constraints>
+                                <state key="normal" image="button_tellphone.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="callAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="N53-hu-gvO"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="image_default_head.png" translatesAutoresizingMaskIntoConstraints="NO" id="tMv-R6-Lvr">
+                                <rect key="frame" x="17" y="30" width="60" height="60"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="姓名：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nNy-ii-L0K">
+                                <rect key="frame" x="85" y="8" width="45" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="房屋编号:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7HJ-9T-4e9">
+                                <rect key="frame" x="85" y="30" width="65" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="18780052973" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYb-KX-zni">
+                                <rect key="frame" x="85" y="54" width="163" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="计划签约时间:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1nN-YS-SQt">
+                                <rect key="frame" x="85" y="77" width="95" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2015/01/04" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="25i-tK-bvN">
+                                <rect key="frame" x="85" y="99" width="163" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="张三" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o19-ZT-oGZ">
+                                <rect key="frame" x="133" y="8" width="120" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="yilianxi.png" translatesAutoresizingMaskIntoConstraints="NO" id="qWH-Sg-mhf">
+                                <rect key="frame" x="17" y="70" width="20" height="20"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZ2-Wn-vUD">
+                                <rect key="frame" x="17" y="92" width="40" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="未联系">
+                                    <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="contactAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="0LJ-ke-Pg7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FoB-48-AMg" firstAttribute="top" secondItem="Sx8-UO-yE1" secondAttribute="top" constant="30" id="Bhu-2g-3Da"/>
+                            <constraint firstAttribute="trailing" secondItem="FoB-48-AMg" secondAttribute="trailing" constant="8" id="QIf-ao-yGv"/>
+                            <constraint firstAttribute="bottom" secondItem="vFV-7W-b54" secondAttribute="bottom" constant="8" id="t8d-77-Sqc"/>
+                            <constraint firstAttribute="trailing" secondItem="vFV-7W-b54" secondAttribute="trailing" constant="8" id="tbW-Qd-smu"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Sx8-UO-yE1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="3yg-2g-s2L"/>
+                    <constraint firstItem="Sx8-UO-yE1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="KUw-ed-Mwh"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Sx8-UO-yE1" secondAttribute="trailing" constant="-8" id="Snv-Gk-SaV"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Sx8-UO-yE1" secondAttribute="bottom" constant="-9" id="uE9-AG-uDk"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contactBtn" destination="ZZ2-Wn-vUD" id="6H3-7i-Xbb"/>
+                <outlet property="contactIV" destination="qWH-Sg-mhf" id="hf7-tp-eds"/>
+                <outlet property="lastTrackDate" destination="25i-tK-bvN" id="O6n-IO-Du5"/>
+                <outlet property="phoneNumber" destination="VYb-KX-zni" id="f5i-d0-p0t"/>
+                <outlet property="photoIV" destination="tMv-R6-Lvr" id="sWo-VD-XCI"/>
+                <outlet property="userName" destination="o19-ZT-oGZ" id="AjU-Mw-nqc"/>
+            </connections>
+            <point key="canvasLocation" x="445" y="308"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="button_message.png" width="72" height="72"/>
+        <image name="button_tellphone.png" width="71" height="71"/>
+        <image name="image_default_head.png" width="142" height="145"/>
+        <image name="yilianxi.png" width="61" height="60"/>
+    </resources>
+</document>

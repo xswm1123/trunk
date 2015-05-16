@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RankingViewController">
+            <connections>
+                <outlet property="scrollView" destination="KSg-Za-PYC" id="lQC-EP-rrL"/>
+                <outlet property="scrollView2" destination="f5M-23-2Ay" id="e5I-LM-eXd"/>
+                <outlet property="type" destination="5uP-Ny-cyW" id="qFZ-mh-fEZ"/>
+                <outlet property="type2" destination="IHq-zh-Slc" id="nAL-PY-aWG"/>
+                <outlet property="typeView" destination="Rhp-yZ-Mwa" id="mVw-CO-KRe"/>
+                <outlet property="typeView2" destination="TNd-kd-ynj" id="b7a-Zf-wde"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KSg-Za-PYC">
+                    <rect key="frame" x="0.0" y="76" width="320" height="120"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="120" id="AWl-GO-pm9"/>
+                    </constraints>
+                </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rhp-yZ-Mwa">
+                    <rect key="frame" x="8" y="23" width="304" height="45"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5uP-Ny-cyW">
+                            <rect key="frame" x="55" y="8" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="zhuanhuanlv.png" translatesAutoresizingMaskIntoConstraints="NO" id="iUG-0a-9Ks">
+                            <rect key="frame" x="8" y="8" width="30" height="30"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="NYa-g0-Co1"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TNd-kd-ynj">
+                    <rect key="frame" x="8" y="204" width="304" height="45"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IHq-zh-Slc">
+                            <rect key="frame" x="55" y="8" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="zhuanhuanlv.png" translatesAutoresizingMaskIntoConstraints="NO" id="rbN-r6-HUE">
+                            <rect key="frame" x="8" y="8" width="30" height="30"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="bEb-2n-t52"/>
+                    </constraints>
+                </view>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5M-23-2Ay">
+                    <rect key="frame" x="0.0" y="257" width="320" height="120"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="120" id="p2W-8Q-0Un"/>
+                    </constraints>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="f5M-23-2Ay" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5rb-uB-aDi"/>
+                <constraint firstItem="KSg-Za-PYC" firstAttribute="top" secondItem="Rhp-yZ-Mwa" secondAttribute="bottom" constant="8" id="8te-3r-sex"/>
+                <constraint firstItem="Rhp-yZ-Mwa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="23" id="9ka-Yl-f5k"/>
+                <constraint firstAttribute="trailing" secondItem="Rhp-yZ-Mwa" secondAttribute="trailing" constant="8" id="Dfp-sJ-aiR"/>
+                <constraint firstItem="Rhp-yZ-Mwa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="GWl-HP-H2Q"/>
+                <constraint firstItem="KSg-Za-PYC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="RYu-BS-Hl6"/>
+                <constraint firstAttribute="trailing" secondItem="f5M-23-2Ay" secondAttribute="trailing" id="UXr-CH-48g"/>
+                <constraint firstItem="TNd-kd-ynj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="Z7j-bm-gIo"/>
+                <constraint firstAttribute="trailing" secondItem="TNd-kd-ynj" secondAttribute="trailing" constant="8" id="ZdY-Wk-CtL"/>
+                <constraint firstItem="f5M-23-2Ay" firstAttribute="top" secondItem="TNd-kd-ynj" secondAttribute="bottom" constant="8" id="lOO-Xt-agv"/>
+                <constraint firstAttribute="trailing" secondItem="KSg-Za-PYC" secondAttribute="trailing" id="sBJ-2d-s72"/>
+                <constraint firstItem="TNd-kd-ynj" firstAttribute="top" secondItem="KSg-Za-PYC" secondAttribute="bottom" constant="8" id="yGA-vt-vHS"/>
+            </constraints>
+            <point key="canvasLocation" x="713" y="393"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="zhuanhuanlv.png" width="41" height="50"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
