@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="./css/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+		<meta charset="gb2312"/>
+		<title>收入费用统计--明细</title>
+		<style type="text/css">
+			.btn{background:#4da7d9;width:48%;height:48px;display:block;color:white;text-align:center;line-height:48px;text-decoration:none;float:left;}
+			.spec{width:80px;}
+			.active{background:#ffd040;}
+			.selection-div{width:100%;background:#BFE0EF;}
+			.selection-div-top{height:60px;}
+			.selection-div-bottom{height:150px;}
+			.dialog-model {
+			  display:none;opacity: 0.7; background: none repeat scroll 0% 0% rgb(0, 0, 0); position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; -moz-user-select: none; z-index: 9999;
+			}
+			.dialog{width:300px;height:200px;z-index:10000;display:none;position:fixed;font-size:12px;}
+			.dialog-title{width:100%;height:50px;background:#4DA7D9;text-align:center;line-height:50px;color:#ffffff;}
+			.dialog-close{float:right;font-size:20px;margin-right:10px;cursor:pointer;}
+			.dialog-content{width:100%;height:150px;background:#ffffff;}
+		</style>
+	</head>
+	<body>
+		<div>
+			<a href="sale_stat.html" class="btn">销售统计</a><a href="#" class="btn active">收入费用统计</a>
+		</div>
+		<div style="height:10px;clear:both;"></div>
+		<div style="position:absolute;left:30%;width:180px;">
+			<a href="in_out_total.html" class="btn spec">总计</a><a href="in_out_detail.html" class="btn spec active">明细</a>
+		</div>
+		<div style="height:70px;clear:both;"></div>
+		<div class="selection-div selection-div-top">
+			<a href="javascript:void(0);" class="btn spec active" style="margin:5px 10px;">今日</a>
+			<a href="javascript:void(0);" class="btn spec active" style="margin:5px 10px;" onclick="javascript:showDialog();">自定义</a>
+			<span style="line-height:60px;" id="timeText"></span>
+		</div>
+		<div style="width:100%;height:1px;"></div>
+		<div class="selection-div selection-div-bottom">
+			<table style="width:100%;">
+				<tr>
+					<td>
+						项目
+					</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+						<option value="0">邦泰华府公馆</option>
+						<option value="1">凤凰城</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						费用类型
+					</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+						<option value="0">广告费用</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="line" style="height:400px;"></div>
+		<div class="dialog">
+			<div class="dialog-title">选择时间
+				<div class="dialog-close">X</div>
+			</div>
+			<div class="dialog-content">
+				<div style="margin:5px;">开始时间：<input id="startTime" class="easyui-datebox" style="width:200px;height:30px;"  data-options="formatter:myformatter,parser:myparser"/></div>
+				<div style="margin:5px;">结束时间：<input id="endTime" class="easyui-datebox" style="width:200px;height:30px;"  data-options="formatter:myformatter,parser:myparser"/></div>
+				<div style="margin:5px;">
+					<input type="button" value="确定" onclick="selectTime();"/>
+				</div>
+			</div>
+		</div>
+		<div class="dialog-model"></div>
+		<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/echarts-all.js"></script>
+		<script type="text/javascript" src="./js/macarons.js"></script>
+		<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			var line = {
+				title : {
+					text: '',
+					subtext: ''
+				},
+				tooltip : {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['费用']
+				},
+				toolbox: {
+					show : false,
+					feature : {
+						mark : {show: true},
+						dataView : {show: true, readOnly: false},
+						magicType : {show: true, type: ['line', 'bar']},
+						restore : {show: true},
+						saveAsImage : {show: true}
+					}
+				},
+				calculable : true,
+				xAxis : [
+					{
+						type : 'category',
+						boundaryGap : false,
+						data : ['1','2','3','4','5','6','7','8','9','10','11','12']
+					}
+				],
+				yAxis : [
+					{
+						type : 'value',
+						axisLabel : {
+							formatter: '{value} °C'
+						}
+					}
+				],
+				series : [
+					{
+						name:'费用',
+						type:'line',
+						data:[11, 11, 15, 13, 12, 13, 10,12,1,23,12,12],
+						markPoint : {
+							data : [
+								{type : 'max', name: '最大值'},
+								{type : 'min', name: '最小值'}
+							]
+						},
+						markLine : {
+							data : [
+								{type : 'average', name: '平均值'}
+							]
+						}
+					}
+				]
+			};
+			showLine();
+			function showLine(){
+				
+				var myChart = echarts.init(document.getElementById('line'),theme);
+				myChart.setOption(line);
+				myChart.on("click", function(params){
+					//alert(params.seriesIndex);
+					showDialog();
+					var event = params.event || window.event;
+					if(event.stopPropagation) { //W3C阻止冒泡方法  
+				        event.stopPropagation();  
+				    } else {  
+				        event.cancelBubble = true; //IE阻止冒泡方法  
+				    } 
+				});
+			};
+			$(function(){
+				$(".dialog-close").click(function(e){
+					closeDialog();
+				});
+			});
+			function showDialog(){
+				var window_width = $(window).width();
+				var window_height = $(window).height();
+				var left = $(".dialog").offset().left;
+				var width = $(".dialog").width();
+				var height = $(".dialog").height();
+				var top = (window_height - height) >> 1;
+				var left = (window_width - width) >> 1;
+				$(".dialog").css({top:top,left:left}).fadeIn(1000);
+				$(".dialog-model").show();
+			};
+			function closeDialog(){
+				$(".dialog").hide();
+				$(".dialog-model").hide();
+			};
+			 function myformatter(date){
+				var y = date.getFullYear();
+				var m = date.getMonth()+1;
+				var d = date.getDate();
+				return y+'/'+(m<10?('0'+m):m)+'/'+(d<10?('0'+d):d);
+			};
+			function myparser(s){
+				if (!s) return new Date();
+					var ss = (s.split('/'));
+					var y = parseInt(ss[0],10);
+					var m = parseInt(ss[1],10);
+					var d = parseInt(ss[2],10);
+					if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+					return new Date(y,m-1,d);
+				} else {
+					return new Date();
+				}
+			};
+			function selectTime(){
+				var startTime = $("#startTime").datebox("getValue");
+				var endTime = $("#endTime").datebox("getValue");
+				$("#timeText").html(startTime+"-"+endTime);
+				closeDialog();
+			};
+		</script>
+	</body>
+</html>

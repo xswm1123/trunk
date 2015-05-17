@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="./css/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+		<meta charset="gb2312"/>
+		<title>收入费用统计--总计</title>
+		<style type="text/css">
+			.btn{background:#4da7d9;width:48%;height:48px;display:block;color:white;text-align:center;line-height:48px;text-decoration:none;float:left;}
+			.spec{width:60px;}
+			.active{background:#ffd040;}
+			.dialog{width:300px;height:200px;z-index:10000;display:none;position:fixed;}
+			.dialog-title{width:100%;height:50px;background:#4DA7D9;text-align:center;line-height:50px;color:#ffffff;}
+			.dialog-close{float:right;font-size:20px;margin-right:10px;cursor:pointer;}
+			.dialog-content{width:100%;height:150px;background:#ffffff;}
+			.dialog-model {
+			  display:none;opacity: 0.7; background: none repeat scroll 0% 0% rgb(0, 0, 0); position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; -moz-user-select: none; z-index: 9999;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<a href="sale_stat.html" class="btn">销售统计</a><a href="#" class="btn active">收入费用统计</a>
+		</div>
+		<div style="height:10px;clear:both;"></div>
+		<div style="position:absolute;left:30%;width:120px;">
+			<a href="in_out_total.html" class="btn spec active">总计</a><a href="in_out_detail.html" class="btn spec">明细</a>
+		</div>
+		<div style="height:70px;clear:both;"></div>
+		<div style="margin:5px 0px;">
+			项目&nbsp;&nbsp;&nbsp;&nbsp;
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">邦泰华府公馆</option>
+			<option value="1">凤凰城</option>
+		</select>
+		<div id="pie" style="height:200px;"></div>
+		<div id="line" style="height:400px;"></div>
+		<div class="dialog">
+			<div class="dialog-title">费用 2014-01-14
+				<div class="dialog-close">X</div>
+			</div>
+			<div class="dialog-content"></div>
+		</div>
+		<div class="dialog-model"></div>
+		<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/echarts-all.js"></script>
+		<script type="text/javascript" src="./js/macarons.js"></script>
+		<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			var pie = {
+				title : {
+					text: '',
+					subtext: '',
+					x:'center'
+				},
+				tooltip : {
+					trigger: 'item',
+					formatter: "{a} <br/>{b} : {d}%"
+				},
+				legend: {
+					orient : 'vertical',
+					x : 'left',
+					data:['收入','费用']
+				},
+				toolbox: {
+					show : false
+				},
+				calculable : true,
+				series : [
+					{
+						itemStyle : {normal : {label : {position : 'outer',formatter : "{b}({c})"},labelLine : {show : true}}},
+						name:'回款金额统计',
+						type:'pie',
+						radius : '55%',
+						center: ['50%', '60%'],
+						data:[
+							{value:335, name:'收入'},
+							{value:310, name:'费用'}
+						]
+						
+					}
+				]
+			};
+			var line = {
+				title : {
+					text: '',
+					subtext: ''
+				},
+				tooltip : {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['收入','费用']
+				},
+				toolbox: {
+					show : false,
+					feature : {
+						mark : {show: true},
+						dataView : {show: true, readOnly: false},
+						magicType : {show: true, type: ['line', 'bar']},
+						restore : {show: true},
+						saveAsImage : {show: true}
+					}
+				},
+				calculable : true,
+				xAxis : [
+					{
+						type : 'category',
+						boundaryGap : false,
+						data : ['1','2','3','4','5','6','7','8','9','10','11','12']
+					}
+				],
+				yAxis : [
+					{
+						type : 'value',
+						axisLabel : {
+							formatter: '{value} °C'
+						}
+					}
+				],
+				series : [
+					{
+						name:'收入',
+						type:'line',
+						data:[11, 11, 15, 13, 12, 13, 10,12,1,23,12,12],
+						markPoint : {
+							data : [
+								{type : 'max', name: '最大值'},
+								{type : 'min', name: '最小值'}
+							]
+						},
+						markLine : {
+							data : [
+								{type : 'average', name: '平均值'}
+							]
+						}
+					},
+					{
+						name:'费用',
+						type:'line',
+						data:[-2, 2, 5, 3, 2, 0,1,4,3,2,3,4],
+						markPoint : {
+							data : [
+								{name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+							]
+						},
+						markLine : {
+							data : [
+								{type : 'average', name : '平均值'}
+							]
+						}
+					}
+				]
+			};
+			showPie();
+			showLine();
+			$(function(){
+				$(".dialog-close").click(function(e){
+					closeDialog();
+				});
+			});
+			function showPie(){
+				var myChart = echarts.init(document.getElementById('pie'),theme);
+				myChart.setOption(pie);
+			};
+			function showLine(){
+				
+				var myChart = echarts.init(document.getElementById('line'),theme);
+				myChart.setOption(line);
+				myChart.on("click", function(params){
+					//alert(params.seriesIndex);
+					showDialog();
+					var event = params.event || window.event;
+					if(event.stopPropagation) { //W3C阻止冒泡方法  
+				        event.stopPropagation();  
+				    } else {  
+				        event.cancelBubble = true; //IE阻止冒泡方法  
+				    } 
+				});
+			};
+			function showDialog(){
+				var window_width = $(window).width();
+				var window_height = $(window).height();
+				var left = $(".dialog").offset().left;
+				var width = $(".dialog").width();
+				var height = $(".dialog").height();
+				var top = (window_height - height) >> 1;
+				var left = (window_width - width) >> 1;
+				$(".dialog").css({top:top,left:left}).fadeIn(1000);
+				$(".dialog-model").show();
+			};
+			function closeDialog(){
+				$(".dialog").hide();
+				$(".dialog-model").hide();
+			};
+		</script>
+	</body>
+</html>

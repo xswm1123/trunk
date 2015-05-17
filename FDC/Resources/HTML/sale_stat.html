@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="./css/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+		<meta charset="gb2312"/>
+		<title>销售统计</title>
+		<style type="text/css">
+			.btn{background:#4da7d9;width:48%;height:48px;display:block;color:white;text-align:center;line-height:48px;text-decoration:none;float:left;}
+			.active{background:#ffd040;}
+			.round{-moz-border-radius: 25px;-webkit-border-radius: 25px;border-radius:25px;height:40px;line-height:40px;}
+		</style>
+	</head>
+	<body>
+		<div style="48px;">
+			<a href="#" class="btn active">销售统计</a><a href="in_out_total.html" class="btn">收入费用统计</a>
+		</div>
+		<div style="height:20px;clear:both;"></div>
+		<div style="margin:5px 0px;">
+			项目&nbsp;&nbsp;&nbsp;&nbsp;
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">邦泰华府公馆</option>
+			<option value="1">凤凰城</option>
+		</select>
+		<div style="margin-top:30px;">总房源：180套</div>
+		<div style="margin-top:10px;">
+			<div class="round" style="width:100%;background:#dbdbdb;text-align:right;">
+				<div class="round" style="width:35%;background:#ffd040;text-align:center;float:left;">
+					已售100套
+				</div>
+				<div style="margin-right:10px;text-align:center;float:right;">
+					未售480套
+				</div>
+			</div>
+		</div>
+		<hr style="border:1px solid #4da7d9;"/>
+		<div style="margin:5px 0px;">
+			销售统计
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">回款金额统计</option>
+		</select>
+		<div id="main" style="height:400px;">
+		</div>
+		<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/echarts-all.js"></script>
+		<script type="text/javascript" src="./js/macarons.js"></script>
+		<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			var option = {
+				title : {
+					text: '',
+					subtext: '',
+					x:'center'
+				},
+				tooltip : {
+					trigger: 'item',
+					formatter: "{a} <br/>{b} : {d}%"
+				},
+				legend: {
+					orient : 'vertical',
+					x : 'left',
+					data:['结清房源回款','未结清待回款','未结清已回款']
+				},
+				toolbox: {
+					show : false
+				},
+				calculable : true,
+				series : [
+					{
+						itemStyle : {normal : {label : {position : 'outer',formatter : "{b}{d}%"},labelLine : {show : true}}},
+						name:'回款金额统计',
+						type:'pie',
+						radius : '55%',
+						center: ['50%', '60%'],
+						data:[
+							{value:335, name:'结清房源回款'},
+							{value:310, name:'未结清待回款'},
+							{value:234, name:'未结清已回款'}
+						]
+						
+					}
+				]
+			};
+			show(option);
+			function show(option){				
+				var myChart = echarts.init(document.getElementById('main'),theme);
+				myChart.setOption(option);
+			};
+		</script>
+	</body>
+</html>

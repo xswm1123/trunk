@@ -1,0 +1,23 @@
+//
+//  CalculateCellTableViewCell.m
+//  FDC
+//
+//  Created by NewDoone on 15/4/1.
+//  Copyright (c) 2015年 wlpiaoyi. All rights reserved.
+//
+
+#import "CalculateCellTableViewCell.h"
+
+@implementation CalculateCellTableViewCell
+
+- (void)awakeFromNib {
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

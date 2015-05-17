@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="./css/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+		<meta charset="gb2312"/>
+		<title>客户</title>
+	</head>
+	<body>
+		<div style="margin:5px 0px;">
+			项目&nbsp;&nbsp;&nbsp;&nbsp;
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">邦泰华府公馆</option>
+			<option value="1">凤凰城</option>
+		</select>
+		</div>
+		<hr style="border:1px dashed #4da7d9;"/>
+		<div style="margin:5px 0px;">
+			调查表
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">调查表</option>
+		</select>
+		</div>
+		<div style="margin:5px 0px;">
+			调查项
+			<select class="easyui-combobox" data-options="editable:false" style="width:60%;height:30px;">
+			<option value="0">预期价位</option>
+			<option value="1">购房目的</option>
+		</select>
+		</div>
+	<div id="main" style="height: 400px;"></div>
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/echarts-all.js"></script>
+		<script type="text/javascript" src="./js/macarons.js"></script>
+		<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			var option = {
+				title : {
+					text : '面积区间',
+					subtext : '',
+					x : 'center'
+				},
+				tooltip : {
+					trigger : 'item',
+					formatter : "{a} <br/>{b} : ({c}人) {d}%"
+				},
+				legend : {
+					orient : 'vertical',
+					x : 'left',
+					data : [ '120平米', '130平米', '140平米', '150平米', '160平米' ]
+				},
+				toolbox : {
+					show : false
+				},
+				calculable : false,
+				series : [ {
+					itemStyle : {
+						normal : {
+							label : {
+								position : 'outer',
+								formatter : "{c}({d}%)"
+							},
+							labelLine : {
+								show : true
+							}
+						}
+					},
+					name : '面积区间',
+					type : 'pie',
+					radius : '55%',
+					center : [ '50%', '60%' ],
+					data : [ {
+						value : 335,
+						name : '120平米'
+					}, {
+						value : 310,
+						name : '130平米'
+					}, {
+						value : 234,
+						name : '140平米'
+					}, {
+						value : 135,
+						name : '150平米'
+					}, {
+						value : 1548,
+						name : '160平米'
+					} ]
+
+				} ]
+			};
+			show();
+			function show() {
+				var myChart = echarts.init(document.getElementById('main'),
+						theme);
+				myChart.setOption(option);
+				
+				myChart.on("refresh");
+			};
+		</script>
+	</body>
+</html>

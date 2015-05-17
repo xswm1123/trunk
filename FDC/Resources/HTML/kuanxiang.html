@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="./css/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+		<meta charset="gb2312"/>
+		<title>待回款分析</title>
+		<style type="text/css">
+			.border_left{
+				border-left:2px solid #4DA7D9;
+			}
+			div.h20{
+				width:100%;
+				height:20px;
+			}
+			div.main{
+				width:100%;
+				margin-left:-20px;
+			}
+			span.text{
+				color:#4CA6D8;
+			}
+			div.main ul{
+				list-style-type:none;width:100%;
+			}
+			div.main li.row3{
+				width:24%;margin-right:20px;float:left;
+			}
+			div.main li.row4{
+				width:18%;margin-right:20px;float:left;
+			}
+			div.rect{
+				width:100%;background:#4DA7D9;text-align:center;
+			}
+			.rect-text{
+				color:#ffffff;word-break:normal; width:80%; display:block; white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;
+			}
+			div.rect-desc{
+				width:100%;text-align:center;margin-top:10px;font-weight:bold;color:#000000;
+			}
+			/*圆角气泡框*/
+			.triangle-isosceles {
+				position:relative;
+				padding:15px;
+				margin:1em 0 3em;
+				background:#3D3D3D; /* default background for browsers without gradient support */
+				background:-webkit-gradient(linear, 0 0, 0 100%, from(#3D3D3D), to(#3D3D3D));
+				background:-moz-linear-gradient(#3D3D3D, #3D3D3D);
+				background:-o-linear-gradient(#3D3D3D, #3D3D3D);
+				background:linear-gradient(#3D3D3D, #3D3D3D);
+				-webkit-border-radius:10px;
+				-moz-border-radius:10px;
+				border-radius:10px;
+				color:#ffffff;
+				display:none;
+				width:100%;
+				position:absolute;
+			}
+			.triangle-isosceles.left {
+				margin-left:50px;
+				background:#3D3D3D;
+			}
+			.triangle-isosceles:after {
+				content:"";
+				position:absolute;
+				bottom:-15px;
+				left:50px;
+				border-width:15px 15px 0; 
+				border-style:solid;
+				border-color:#3D3D3D transparent;
+				display:block; 
+				width:0;
+			}
+			.triangle-isosceles.left:after {
+				top:16px;
+				left:-10px;
+				bottom:auto;
+				border-width:10px 10px 10px 0;
+				border-color:transparent #3D3D3D;
+			}
+			.triangle-isosceles.right {
+				margin-right:50px;
+				background:#3D3D3D;
+			}
+			.triangle-isosceles.right:after {
+				top:16px; /* controls vertical position */
+				right:-10px;
+				bottom:auto;
+				left:auto;
+				border-width:10px 0 10px 10px;
+				border-color:transparent #3D3D3D;
+			}
+			.round_photo{
+				width:20px;
+				height:20px;
+				background: #4DA7D9;
+				-moz-border-radius: 59px;
+				-webkit-border-radius: 59px;
+				border-radius:59px;
+				behavior:url(PIE.htc);
+				float:left;
+				margin-right:10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="width:100%;height:60px;background:#BFE0EF">
+			<div style="width:80%;height:50px;line-height:50px;margin:0 auto;">
+				项目
+				<select class="easyui-combobox" id="projectId" data-options="editable:false,onSelect:selectProject" style="width:80%;height:30px;">
+					<option value="0">邦泰华府公馆</option>
+					<option value="1">凤凰城</option>
+				</select>
+			</div>
+		</div>
+		<div style="width:100%;margin-top:20px;">
+			<table width="100%" border="0" cellpadding="2" cellspacing="1" style="table-layout:fixed;">
+				<tr style="text-align:center;">
+					<td>套数总计100套</td>
+					<td class="border_left">面积100m<sup>2</sup></td>
+					<td class="border_left">合同价100万元</td>
+				</tr>
+				<tr style="height:10px;">
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr style="text-align:center;">
+					<td>已收款项5万元</td>
+					<td class="border_left">应收金额5元</td>
+					<td class="border_left">&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+		<hr style="border:2px solid #4da7d9;"/>
+		<div style="width:100%;">
+		<!-- 订房未签约 -->
+			<div style="width:100%;">
+				<div class="round_photo"></div>
+				<span class="text">订房未签约</span>
+				<div class="main">
+					<ul>
+						<li class="row3">
+							<!-- 矩形的高度通过返回来的值计算出来的 -->
+							<div class="rect" id="div1" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.5万</label>
+							</div>
+							<div class="rect-desc">正常期限</div>
+							<div id="triangle1" class="triangle-isosceles left">
+								<div>套数：10套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row3">
+							<div class="rect" id="div2" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">无故超期</div>
+							<div id="triangle2" class="triangle-isosceles left">
+								<div>套数：110套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row3">
+							<div class="rect" id="div3" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">延期签约申请</div>
+							<div id="triangle3" class="triangle-isosceles right">
+								<div>套数：100套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- 签约未回款 -->
+			<div style="width:100%;clear:both;">
+			<div class="h20"></div>
+				<div class="round_photo"></div>
+				<span class="text">签约未回款</span>
+				<div class="main">
+					<ul>
+						<li class="row3">
+							<!-- 矩形的高度通过返回来的值计算出来的 -->
+							<div class="rect" id="div4" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.5万</label>
+							</div>
+							<div class="rect-desc">一次性客户</div>
+							<div id="triangle4" class="triangle-isosceles left">
+								<div>套数：10套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row3">
+							<div class="rect" id="div5" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">分期客户</div>
+							<div id="triangle5" class="triangle-isosceles left">
+								<div>套数：110套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row3">
+							<div class="rect" id="div6" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">按揭客户</div>
+							<div id="triangle6" class="triangle-isosceles right">
+								<div>套数：100套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- 银行待回款 -->
+			<div style="width:100%;clear:both;">
+			<div class="h20"></div>
+				<div class="round_photo"></div>
+				<span class="text">银行待回款</span>
+				<div class="main">
+					<ul>
+						<li class="row4">
+							<!-- 矩形的高度通过返回来的值计算出来的 -->
+							<div class="rect" id="div7" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.5万</label>
+							</div>
+							<div class="rect-desc">首付分期未结清</div>
+							<div id="triangle7" class="triangle-isosceles left">
+								<div>套数：10套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row4">
+							<div class="rect" id="div8" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">首付分期结清未办理按揭</div>
+							<div id="triangle8" class="triangle-isosceles left">
+								<div>套数：110套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row4">
+							<div class="rect" id="div9" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">报送银行审批中</div>
+							<div id="triangle9" class="triangle-isosceles right">
+								<div>套数：100套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+						<li class="row4">
+							<div class="rect" id="div10" style="height:200px;">
+								<!-- padding-top的值为矩形的高度/2 - 20 计算出来的 -->
+								<label class="rect-text" style="padding-top:80px;">待回款0.2万</label>
+							</div>
+							<div class="rect-desc">报送银行审批中</div>
+							<div id="triangle10" class="triangle-isosceles right">
+								<div>套数：100套</div>
+								<div>面积：100m<sup>2</sup></div>
+								<div>合同价：100万</div>
+								<div>已收款：20万</div>
+								<div>应收款100万</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				$("body").click(function(e){
+					hideTriangle();
+				});
+				//正常期限
+				$("div#div1").click(function(e){
+					hideTriangle(1);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle1").is(":visible")){
+						$("#triangle1").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle1").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//无故超期
+				$("div#div2").click(function(e){
+					hideTriangle(2);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle2").is(":visible")){
+						$("#triangle2").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle2").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//延期签约申请
+				$("div#div3").click(function(e){
+					hideTriangle(3);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle3").is(":visible")){
+						$("#triangle3").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle3").css({
+							top:top,
+							left:left-($(this).width() << 1)-30,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//一次性客户
+				$("div#div4").click(function(e){
+					hideTriangle(4);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle4").is(":visible")){
+						$("#triangle4").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle4").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//分期客户
+				$("div#div5").click(function(e){
+					hideTriangle(5);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle5").is(":visible")){
+						$("#triangle5").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle5").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//按揭客户
+				$("div#div6").click(function(e){
+					hideTriangle(6);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle6").is(":visible")){
+						$("#triangle6").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle6").css({
+							top:top,
+							left:left-($(this).width() << 1)-30,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//首付分期未结清
+				$("div#div7").click(function(e){
+					hideTriangle(7);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle7").is(":visible")){
+						$("#triangle7").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle7").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//首付分期结清未办理按揭
+				$("div#div8").click(function(e){
+					hideTriangle(8);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle8").is(":visible")){
+						$("#triangle8").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle8").css({
+							top:top,
+							left:left+$(this).width()-50,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//报送银行审批中
+				$("div#div9").click(function(e){
+					hideTriangle(9);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle9").is(":visible")){
+						$("#triangle9").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle9").css({
+							top:top,
+							left:left-($(this).width() << 1)-60,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+				//报送银行审批中
+				$("div#div10").click(function(e){
+					hideTriangle(10);
+					$(this).css("background","#4DA7D9");
+					if($("#triangle10").is(":visible")){
+						$("#triangle10").fadeOut(1000);
+					}else{
+						var top = $(this).offset().top;
+						var left = $(this).offset().left;
+						var width = $("div.main").width();
+						$("#triangle10").css({
+							top:top,
+							left:left-($(this).width() << 1)-60,
+							width:width / 2
+						}).fadeIn(1000);
+					}
+					var event = e || window.event;
+					event.stopPropagation();
+				});
+			});
+			function hideTriangle(index){
+				for(var i=1;i<=10;i++){
+					if(index && i == index){
+						continue;
+					}
+					$("#triangle"+i).hide();
+				}
+			};
+			//切换项目
+			function selectProject(record){
+				var value = record.value;//项目ID
+				var text = record.text;//项目名
+			};
+		</script>
+	</body>
+</html>

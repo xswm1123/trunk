@@ -1,0 +1,23 @@
+<ROOT>
+    <DATAS>
+        <DATA id="1" title="首页" normalImage="button_toolsbar_home_normal.png" selectedImage="button_toolsbar_home_selected.png"/>
+        <DATA id="2" title="客户" normalImage="button_toolsbar_customer_normal.png" selectedImage="button_toolsbar_customer_selected.png"/>
+        <DATA id="3" title="跟踪" normalImage="button_toolsbar_track_normal.png" selectedImage="button_toolsbar_track_selected.png"/>
+        <DATA id="4" title="工具箱" normalImage="button_toolsbar_tools_normal.png" selectedImage="button_toolsbar_tools_selected.png"/>
+        <DATA id="5" title="款项" normalImage="button_toolsbar_money_normal.png" selectedImage="button_toolsbar_money_selected.png"/>
+        <DATA id="6" title="销售" normalImage="button_toolsbar_sell_normal.png" selectedImage="button_toolsbar_sell_selected.png"/>
+    </DATAS>
+    <MENUS authority="customer" default="true">
+        <MENU dataId="1" xib="customerIndexViewController" order="1"></MENU>
+        <MENU dataId="2" xib="CustomerManagerViewController" order="2"/>
+        <MENU dataId="3" xib="CustomerTrackViewController" order="3"/>
+        <MENU dataId="4" xib="ToolBoxViewController" order="4"/>
+    </MENUS>
+    <MENUS authority="admin" default="true">
+        <MENU dataId="1" xib="ManagerIndexViewController" order="1"></MENU>
+        <MENU dataId="2" xib="CustomerViewController" order="2"/>
+        <MENU dataId="6" xib="SellStatisticsViewController" order="3"/>
+        <MENU dataId="5" clazz="FinanceViewController" order="4"/>
+        <MENU dataId="4" clazz="ToolBoxViewController" order="5"/>
+    </MENUS>
+</ROOT>
