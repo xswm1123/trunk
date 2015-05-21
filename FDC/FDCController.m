@@ -14,6 +14,7 @@ UIImage *imageButtonSelectObject;
 UIImage *imageButtonLogout;
 UIImage *imageButtonBack;
 #define PROJECT_NAME @"PROJECT_NAME"
+#define CURRENTVERSION @"CURRENTVERSION"
 static FDCController* _FDC;
 @implementation FDCController
 +(FDCController *)shareInstance{
@@ -34,6 +35,18 @@ static FDCController* _FDC;
 }
 -(NSString *)projectName{
     return [[NSUserDefaults standardUserDefaults]stringForKey:PROJECT_NAME];
+}
+-(void)setCurrentVersion:(NSString *)currentVersion{
+    if (!currentVersion) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:CURRENTVERSION];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:CURRENTVERSION];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+}
+-(NSString *)currentVersion{
+    return  [[NSUserDefaults standardUserDefaults]stringForKey:CURRENTVERSION];
 }
 - (BOOL) shouldAutorotate
 {

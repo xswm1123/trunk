@@ -43,9 +43,11 @@ extern NSString *const URL_BASE_DATA;
  退出
  */
 -(UIBarButtonItem*) createButtonItemBack:(SEL) actio;
+
 /**
  *  保存项目路径
  */
 @property(nonatomic,strong) NSString* projectName;
+@property(nonatomic,strong) NSString* currentVersion;
 +(FDCController*)shareInstance;
 @end

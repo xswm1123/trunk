@@ -147,29 +147,54 @@ static BOOL canSubmit=NO;
         cusid=self.customerInfo.customerId;
         vistWay=self.customerInfo.visitWay;
     }else{
-        cusid=user.userId;
+        cusid=self.customerInfo.customerId;
         vistWay=self.customer.visitWay;
+        if (![NSString isEnabled:vistWay]) {
+            vistWay=self.customerInfo.visitWay;
+        }
+    }
+    if (![NSString isEnabled:vistWay]) {
+        vistWay=@"来电";
     }
     [manager findQuestionaryWithObjectId:user.objectId visitWay:vistWay custormerId:cusid success:^(id data, NSDictionary *userInfo) {
         NSLog(@"quData===%@",data);
         NSDictionary* dic=(NSDictionary*)data;
         self.submitDic=[NSDictionary dictionary];
         self.submitDic=[dic mutableDeepCopy];
-        
-        
         NSLog(@"SFBT:%@",[dic objectForKey:@"BT_SFBT"]); //是否必填
         if ([[dic objectForKey:@"BT_SFBT"] isEqualToString:@"是"]) {
             self.isBT=YES;
         }
-        NSArray* queArr=[dic objectForKey:@"TC_WJST_ARRY"];
+        NSArray* queArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
         self.quArr=[NSMutableArray arrayWithArray:queArr];
-        for ( NSDictionary* dics in queArr) {
+        for ( NSMutableDictionary* dics in queArr) {
             NSLog(@"试题名称:%@",[dics objectForKey:@"ZD_XMMC"]);
             NSArray* arr=[dics objectForKey:@"ST_ARRY"];
             for (NSDictionary* dic_st in arr) {
-                NSLog(@"试题选项名称:%@",[dic_st objectForKey:@"ZM_XMZ"]);
+                if ([[dic_st objectForKey:@"SF_SFXZ"] isEqualToString:@"是"]) {
+                     NSMutableArray* subMArr=[NSMutableArray array];
+                     NSMutableDictionary* answer=[NSMutableDictionary dictionary];
+                    if ([self.mark isEqualToString:@"create"]) {
+                        [answer setObject:self.customer.customerPhone forKey:@"KH_KHDH"];
+                        [answer setObject:self.customer.customerId forKey:@"KH_KHID"];
+                        [answer setObject:self.customer.customerName forKey:@"KH_KHMC"];
+                    }else{
+                        [answer setObject:self.customerInfo.customerPhone forKey:@"KH_KHDH"];
+                        [answer setObject:self.customerInfo.customerId forKey:@"KH_KHID"];
+                        [answer setObject:self.customerInfo.customerName forKey:@"KH_KHMC"];
+                    }
+                    [answer setObject:[dic_st objectForKey:@"WY_WYID"] forKey:@"WY_WYID"];
+                    [answer setObject:[dic_st objectForKey:@"ZD_ZDID"] forKey:@"ZD_ZDID"];
+                    [answer setObject:[dic_st objectForKey:@"ZM_XMZ"] forKey:@"ZM_XMZ"];
+                    [answer setObject:[dic_st objectForKey:@"ZM_ZMID"] forKey:@"ZM_ZMID"];
+                    [subMArr addObject:answer];
+                    //                    [subDic removeObjectForKey:@"KH_KHDA"];
+                    [dics setObject:subMArr forKey:@"KH_KHDA"];
+                }
+                
             }
         }
+        
         
         
     [self createQonScrollView];
@@ -305,7 +330,6 @@ static BOOL canSubmit=NO;
             
             UITapGestureRecognizer* tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showHouseDetail:)];
             label.tag=i;
-//            [label addTarget:self action:@selector(showHouseDetail:)];
             [label addGestureRecognizer:tap];
             label.userInteractionEnabled=YES;
             [self.houseSrcoll addSubview:label];
@@ -551,8 +575,9 @@ static BOOL canSubmit=NO;
                     NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
                     NSMutableDictionary* subDic=[subArr objectAtIndex:sender.tag];
                     [subMArr addObject:answer];
-                    [subDic removeObjectForKey:@"KH_KHDA"];
+//                    [subDic removeObjectForKey:@"KH_KHDA"];
                     [subDic setObject:subMArr forKey:@"KH_KHDA"];
+                    NSLog(@"submitDic:%@",self.submitDic);
                     canSubmit=YES;
                     UIButton* btnQ=[self.QBtns objectAtIndex:sender.tag];
                     btnQ.selected=YES;
@@ -607,6 +632,7 @@ static BOOL canSubmit=NO;
         customer1.sellerName=user.sellerName;
         customer1.sellerId=[NSString stringWithFormat:@"%@",user.sellerId];
         customer1.sellerGroup=user.sellGroup;
+        customer1.objectSimpleName=user.businessSimpleName;
         //    QuestionaryEntity* qentity=[[QuestionaryEntity alloc]init];
         if ([self.mark isEqualToString:@"create"]) {
             customer1=self.customer;
@@ -623,11 +649,10 @@ static BOOL canSubmit=NO;
             [dics setObject:arr forKey:@"ST_ARRY"];
         }
         NSLog(@"self.submitDic:%@",self.submitDic);
-        NSLog(@"customer:%@",[customer1 toInstanceJson]);
         CustomerMainManager* manager=[[CustomerMainManager alloc]init];
         [manager persistCustomer:customer1 Questionnaire:self.submitDic CustomerName:customer1.customerName CustomerPhone:customer1.customerPhone ModifyStatu:statu success:^(id data, NSDictionary *userInfo) {
             NSLog(@"data===%@",data);
-            NSLog(@"userInfo:%@",userInfo);
+            
             [PYToast showWithText:@"提交成功!"];
             [Utils hiddenLoading];
             if ([self.mark isEqualToString:@"create"]) {
@@ -640,10 +665,15 @@ static BOOL canSubmit=NO;
                 entity.mindLevel=customer1.customerLevel;
                 entity.tradeState=@"";
                 entity.customerType=customer1.customerType;
+                entity.customerId=(NSString*)data;
                 c.entity = entity;
-                c.mark=@"新增";
+                c.mark=@"create";
                 c.customerId=(NSString*)data;
-                [self goNextController:c];
+//                [self goNextController:c];
+//                [self presentViewController:c animated:YES completion:^{
+//                    
+//                }];
+                [self.navigationController pushViewController:c animated:YES];
             }else{
                 [self.navigationController popViewControllerAnimated:YES];
             }
@@ -700,7 +730,7 @@ static BOOL canSubmit=NO;
                             UIButton* btn=(UIButton*)vi;
                             if ([btn isSelected]) {
                                 flag=YES;
-                                index=bv.tag-10;
+                                index=(int)bv.tag-10;
                                 NSDictionary* dic=[self.quArr objectAtIndex:alertView.tag];
                                 NSArray* options=[dic objectForKey:@"ST_ARRY"];
                                 NSDictionary* option=[options objectAtIndex:index];
@@ -728,7 +758,7 @@ static BOOL canSubmit=NO;
                                 NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
                                 NSMutableDictionary* subDic=[subArr objectAtIndex:alertView.tag];
                                 [subMArr addObject:answer];
-                                [subDic removeObjectForKey:@"KH_KHDA"];
+//                                [subDic removeObjectForKey:@"KH_KHDA"];
                                 [subDic setObject:subMArr forKey:@"KH_KHDA"];
                                 NSLog(@"mutableDic:%@",self.submitDic);
                             }

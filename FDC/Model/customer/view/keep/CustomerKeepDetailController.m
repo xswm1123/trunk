@@ -43,6 +43,12 @@
     [_buttonMessage addTarget:self action:@selector(onclickMessage)];
 //    _lableFollowUpTime.text = _entity.customerVisitDate;
     // Do any additional setup after loading the view from its nib.
+    if ([self.mark isEqualToString:@"create"]) {
+//        self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]init];
+//        self.navigationController.toolbar.hidden=YES;
+//        self.navigationItem.hidesBackButton=YES;
+//        self.navigationController.navigationBarHidden=YES;
+    }
 }
 -(void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -68,7 +74,7 @@
 -(void) onclickBaseInfo{
     CreateNewCustomerViewController* vc=[[CreateNewCustomerViewController alloc]init];
     vc.title=@"基本信息";
-    if ([self.mark isEqualToString:@"新增"]) {
+    if ([self.mark isEqualToString:@"create"]) {
         
     }else{
           vc.mark=@"基本信息";
@@ -90,6 +96,7 @@
     vc.title=@"调查表";
     vc.index=2;
     vc.customerInfo=self.entity;
+    vc.mark=self.mark;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

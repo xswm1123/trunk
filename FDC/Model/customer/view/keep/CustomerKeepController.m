@@ -70,7 +70,7 @@ static UIColor *colorBuleBg;
     [_buttonName setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_buttonPhone setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
     [_buttonPhone setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_textFieldSearch setCornerRadiusAndBorder:1 BorderWidth:1 BorderColor:[UIColor colorWithHexString:@"222222FF"]];
+    [_textFieldSearch setCornerRadiusAndBorder:1 BorderWidth:1 BorderColor:[UIColor colorWithRed:0.396 green:0.788 blue:0.996 alpha:1]];
     [_buttonName addTarget:self action:@selector(onclickName)];
     [_buttonPhone addTarget: self action:@selector(onclickPhone)];
     [_buttonAdd addTarget:self action:@selector(onclickAddCustomer)];

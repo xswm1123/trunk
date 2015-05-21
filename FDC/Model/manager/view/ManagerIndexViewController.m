@@ -15,6 +15,8 @@
 
 @interface ManagerIndexViewController ()<CustomIOS7AlertViewDelegate,LeveyPopListViewDelegate>
 @property(nonatomic,strong) NSMutableArray* projectNames;
+@property (nonatomic,strong) NSMutableArray* projectIds;
+@property (nonatomic,strong) NSMutableArray* JCs;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (nonatomic,strong) MCProgressBarView * phoneIn;
 @property (nonatomic,strong) MCProgressBarView * visit;
@@ -31,18 +33,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *houseNo1Name;
 @property (weak, nonatomic) IBOutlet UILabel *houseNo2Name;
 @property (weak, nonatomic) IBOutlet UILabel *houseNo3Name;
-@property (weak, nonatomic) IBOutlet UILabel *countNo1;
-@property (weak, nonatomic) IBOutlet UILabel *countNo2;
-@property (weak, nonatomic) IBOutlet UILabel *countNo3;
-@property (weak, nonatomic) IBOutlet UILabel *countNo1Name;
-@property (weak, nonatomic) IBOutlet UILabel *countNo2Name;
-@property (weak, nonatomic) IBOutlet UILabel *countNo3Name;
-@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cicles;
+
 @property(nonatomic,strong) UILabel* tempLb1;
 @property(nonatomic,strong) UILabel* tempLb2;
 @property (weak, nonatomic) IBOutlet UIView *houseNumSubView;
 @property (weak, nonatomic) IBOutlet UILabel *lb_noData;
 @property (nonatomic,strong) NSString* updateUrl;
+@property (weak, nonatomic) IBOutlet UIView *firstView_mostSell;
+@property (weak, nonatomic) IBOutlet UIView *secondView_mostSell;
+@property (weak, nonatomic) IBOutlet UIView *thirdView_mostSell;
 
 
 
@@ -57,16 +56,10 @@
     /*
      hiddenCaculateView
      */
-    for (UIImageView* iv in self.cicles) {
-        iv.hidden=YES;
-    }
-    self.countNo1.hidden=YES;
-    self.countNo2.hidden=YES;
-    self.countNo3.hidden=YES;
-    self.countNo1Name.hidden=YES;
-    self.countNo2Name.hidden=YES;
-    self.countNo3Name.hidden=YES;
     self.lb_noData.hidden=YES;
+    self.firstView_mostSell.hidden=YES;
+    self.secondView_mostSell.hidden=YES;
+    self.thirdView_mostSell.hidden=YES;
     /*
         hiddenEnd
      */
@@ -88,6 +81,7 @@
     self.toDate.text=start;
     [self loadDataWithStartDate:start EndDate:start];
 }
+
 -(void)checkUpdateState{
     NSString *key = (NSString *)kCFBundleVersionKey;
     //    //取出上次使用的版本号
@@ -135,10 +129,16 @@
 -(void)selectObejct{
     self.projectNames=nil;
     self.projectNames=[NSMutableArray array];
+    self.projectIds=nil;
+    self.projectIds=[NSMutableArray array];
+    self.JCs=nil;
+    self.JCs=[NSMutableArray array];
     UserEntity* user=[ConfigManage getLoginUser];
     NSArray* arr=user.authorityInfoObjectGroup;
     for (NSDictionary* dics in arr) {
         [self.projectNames addObject:[dics objectForKey:@"WY_WYMC"]];
+        [self.projectIds addObject:[dics objectForKey:@"WY_WYID"]];
+        [self.JCs addObject:@"WY_WYJC"];
     }
     LeveyPopListView* view=[[LeveyPopListView alloc]initWithTitle:@"请选择项目名称" options:self.projectNames];
     view.delegate=self;
@@ -148,7 +148,16 @@
     self.buildingName.text=[self.projectNames objectAtIndex:anIndex];
     UserEntity* user=[ConfigManage getLoginUser];
     user.objectName=[self.projectNames objectAtIndex:anIndex];
+    user.objectId=[self.projectIds objectAtIndex:anIndex];
+    user.businessSimpleName=[self.JCs objectAtIndex:anIndex];
     [ConfigManage setLoginUser:user];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[NSDate new];
+    NSString* start=[frm stringFromDate:startDate];
+    self.fromDate.text=start;
+    self.toDate.text=start;
+    [self loadDataWithStartDate:start EndDate:start];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (alertView.tag==90) {
@@ -189,11 +198,7 @@
     self.scrollView.bounces=NO;
     self.detailsView.frame=CGRectMake(8, 236, [UIScreen mainScreen].bounds.size.width-16, 200);
     //view
-    if (![self.countNo1 isHidden]) {
-        self.mostSellView.frame=CGRectMake(8, self.detailsView.frame.origin.y+205, [UIScreen mainScreen].bounds.size.width-16, 235);
-    }else{
-        self.mostSellView.frame=CGRectMake(8, self.detailsView.frame.origin.y+205, [UIScreen mainScreen].bounds.size.width-16, 100);
-    }
+
     
     self.sellPlanView.frame=CGRectMake(8, self.mostSellView.frame.origin.y+self.mostSellView.frame.size.height+20, [UIScreen mainScreen].bounds.size.width-16, 180);
     //detailsView
@@ -374,16 +379,18 @@
         if (arr1.count>0) {
             self.houseNumSubView.hidden=NO;
             self.lb_noData.hidden=YES;
-            
+            self.firstView_mostSell.hidden=NO;
             NSDictionary* houseNo1=[arr1 objectAtIndex:0];
             self.houseNo1.text=[houseNo1 objectForKey:@"ZD_ZDVAL"];
             self.houseNo1Name.text=[houseNo1 objectForKey:@"ZD_ZDMC"];
             if (arr1.count>1) {
+                self.secondView_mostSell.hidden=NO;
                 NSDictionary* houseNo2=[arr1 objectAtIndex:1];
                 self.houseNo2.text=[houseNo2 objectForKey:@"ZD_ZDVAL"];
                 self.houseNo2Name.text=[houseNo2 objectForKey:@"ZD_ZDMC"];
             }
             if (arr1.count>2) {
+                self.thirdView_mostSell.hidden=NO;
                 NSDictionary* houseNo3=[arr1 objectAtIndex:2];
                 self.houseNo3.text=[houseNo3 objectForKey:@"ZD_ZDVAL"];
                 self.houseNo3Name.text=[houseNo3 objectForKey:@"ZD_ZDMC"];
@@ -398,21 +405,6 @@
         NSDictionary* house2=[datas objectAtIndex:2];
         NSArray* arr2=[house2 objectForKey:@"LstArry"];
         if (arr2.count>0) {
-            
-            NSDictionary* count1=[arr2 objectAtIndex:0];
-            self.countNo1.text=[count1 objectForKey:@"ZD_ZDVAL"];
-            self.countNo1Name.text=[count1 objectForKey:@"ZD_ZDMC"];
-            if (arr2.count>1) {
-                NSDictionary* count2=[arr2 objectAtIndex:1];
-                self.countNo2.text=[count2 objectForKey:@"ZD_ZDVAL"];
-                self.countNo2Name.text=[count2 objectForKey:@"ZD_ZDMC"];
-            }
-            if (arr2.count>2) {
-                NSDictionary* count3=[arr2 objectAtIndex:2];
-                self.countNo3.text=[count3 objectForKey:@"ZD_ZDVAL"];
-                self.countNo3Name.text=[count3 objectForKey:@"ZD_ZDMC"];
-            }
-            
         }
         
         

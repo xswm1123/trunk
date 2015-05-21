@@ -30,6 +30,8 @@
 @property(nonatomic,strong)CLTreeView_LEVEL2_Model*tradeDoneCount_2;
 @property(nonatomic,strong)CLTreeView_LEVEL2_Model*financeCount_2;
 @property(nonatomic,strong) NSMutableArray* projectNames;
+@property (nonatomic,strong) NSMutableArray* projectIds;
+@property (nonatomic,strong) NSMutableArray* JCs;
 @property(nonatomic,strong) UILabel* tempLb1;
 @property(nonatomic,strong) UILabel* tempLb2;
 
@@ -107,12 +109,19 @@
 -(void)selectObejct{
     self.projectNames=nil;
     self.projectNames=[NSMutableArray array];
+    self.projectIds=nil;
+    self.projectIds=[NSMutableArray array];
+    self.JCs=nil;
+    self.JCs=[NSMutableArray array];
     UserEntity* user=[ConfigManage getLoginUser];
     NSArray* arr=user.authorityInfoObjectGroup;
     //    self.projectName.text=[dic objectForKey:@"WY_WYMC"];
 //    self.objectId=[dic objectForKey:@"WY_WYID"];
     for (NSDictionary* dics in arr) {
         [self.projectNames addObject:[dics objectForKey:@"WY_WYMC"]];
+        [self.projectIds addObject:[dics objectForKey:@"WY_WYID"]];
+        [self.JCs addObject:@"WY_WYJC"];
+
     }
     LeveyPopListView* view=[[LeveyPopListView alloc]initWithTitle:@"请选择项目名称" options:self.projectNames];
     view.delegate=self;
@@ -122,7 +131,18 @@
     self.lb_buildingName.text=[self.projectNames objectAtIndex:anIndex];
     UserEntity* user=[ConfigManage getLoginUser];
     user.objectName=[self.projectNames objectAtIndex:anIndex];
+    user.objectId=[self.projectIds objectAtIndex:anIndex];
+    user.businessSimpleName=[self.JCs objectAtIndex:anIndex];
     [ConfigManage setLoginUser:user];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[NSDate getFirstDayOfWeek];
+    NSDate* endDate=[NSDate getLastDayOfWeek];
+    NSString* start=[frm stringFromDate:startDate];
+    NSString* end=[frm stringFromDate:endDate];
+    [self loadDataWithStartDate:start andEndDate:end];
+    [self loadMonthPlanDatas];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (alertView.tag==90) {

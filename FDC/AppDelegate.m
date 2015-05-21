@@ -26,10 +26,19 @@
     // Override point for customization after application launch.
     globalRotateHasVoice = false;
 //    [self checkUpdateState];
+    [self saveCurrentVersion];
     self.window =  [Utils setRootController:[LoginController new]];
 
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     return YES;
+}
+/**
+ *  save currentVersion
+ */
+-(void)saveCurrentVersion{
+    NSString *key = (NSString *)kCFBundleVersionKey;
+    NSString *currentVersionCode = [NSBundle mainBundle].infoDictionary[key];
+    [FDCController shareInstance].currentVersion=currentVersionCode;
 }
 -(void)checkUpdateState{
     NSString *key = (NSString *)kCFBundleVersionKey;

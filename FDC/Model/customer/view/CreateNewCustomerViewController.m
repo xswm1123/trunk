@@ -407,6 +407,7 @@
             customer.sellerName=user.sellerName;
             customer.sellerId=[NSString stringWithFormat:@"%@",user.sellerId];
             customer.sellerGroup=user.sellGroup;
+            customer.objectSimpleName=user.businessSimpleName;
             if ([NSString isEnabled:self.lb_sex.text]) {
                  customer.sex=self.lb_sex.text;
             }else{
@@ -484,6 +485,7 @@
         customer.sellerName=user.sellerName;
         customer.sellerId=[NSString stringWithFormat:@"%@",user.sellerId];
         customer.sellerGroup=user.sellGroup;
+        customer.objectSimpleName=user.businessSimpleName;
         if ([NSString isEnabled:self.lb_sex.text]) {
             customer.sex=self.lb_sex.text;
         }else{
@@ -578,13 +580,6 @@
         }
         return NO;
     }
-//    if (textField==self.tf_IDNumber) {
-//        if ([NSString isEnabled:self.tf_IDNumber.text]) {
-//            NSRange range=NSMakeRange(6, 8);
-//            self.tf_customerBirthday.text=[self.tf_IDNumber.text substringWithRange:range];
-//        }
-//    }
-    
     return YES;
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField{
@@ -617,17 +612,12 @@
         [Utils showAlert:@"请输入用户名" title:@"提示"];
         return NO;
     }
-//        if (self.tf_phoneNumber.text.length>11) {
-//            [Utils showAlert:@"请输入正确的电话" title:@"提示"];
-//            return NO;
-//        }
     if ([NSString isEnabled:self.tf_IDNumber.text]) {
         if (self.tf_IDNumber.text.length>19||self.tf_IDNumber.text.length<15) {
             [Utils showAlert:@"请输入正确的身份证号！" title:@"提示"];
             return NO;
         }
     }
-    
     return YES;
 }
 

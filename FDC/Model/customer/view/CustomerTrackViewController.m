@@ -62,6 +62,9 @@
     }];
 }
 -(void)initView{
+    self.tf_searchContent.layer.borderWidth=1.0;
+    self.tf_searchContent.layer.borderColor=[UIColor colorWithRed:0.396 green:0.788 blue:0.996 alpha:1].CGColor;
+    
     [self.segementControl setBackgroundImage:[UIImage imageNamed:@"blue_unit.png"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.segementControl setBackgroundImage:[UIImage imageNamed:@"yellow_unit.png"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
     self.segementControl.frameHeight=40;

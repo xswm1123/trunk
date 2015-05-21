@@ -21,6 +21,7 @@
 @property (nonatomic) float viewY;
 @property (nonatomic,strong) UserManager *userManager;
 @property (nonatomic,strong) UIImageView *imageViewBg;
+@property (nonatomic,strong) UILabel* versionLabel;
 @property (nonatomic,strong) AsyncImageView *imageViewUserHead;
 @property (nonatomic,strong) LoginFieldView *filedViewObject;
 @property (nonatomic,strong) LoginFieldView *filedViewUser;
@@ -40,6 +41,7 @@
     [self createField];
     [self createImageViewUserHead];
     [self createImageViewLogo];
+    [self createVersionLabel];
     [self.navigationController setToolbarHidden:YES];
     __weak typeof(self) weakself = self;
     [self setSELShowKeyBoardStart:^{
@@ -60,7 +62,6 @@
     }];
     
     if (![self.mark isEqualToString:@"logout"]) {
-//        NSString* project=[self.filedViewObject filedValue];
         if ([NSString isEnabled:LoginProjectName]) {
             [self autoLoginAction];
         }
@@ -70,6 +71,7 @@
 }
 -(void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
     _viewY = self.view.frameY;
     BOOL flag = false;
     if ([NSString isEnabled:LoginProjectName]) {
@@ -88,9 +90,26 @@
     if (flag) {
     }
 }
+-(void) createVersionLabel{
+    if ([self.mark isEqualToString:@"logout"]) {
+        _versionLabel=[[UILabel alloc]initWithFrame:CGRectMake(20, DEVICE_HEIGHT-40, 100, 40)];
+    }else{
+          _versionLabel=[[UILabel alloc]initWithFrame:CGRectMake(20, DEVICE_HEIGHT-104, 100, 40)];
+    }
+    _versionLabel.text=[NSString stringWithFormat:@"V%@",[FDCController shareInstance].currentVersion];
+    if (!_versionLabel.text.length>0) {
+        _versionLabel.text=@"V1.3";
+    }
+    _versionLabel.font=[UIFont systemFontOfSize:15.0];
+//    [self.view insertSubview:_versionLabel aboveSubview:_imageViewBg];
+//    [self.view insertSubview:_versionLabel atIndex:100];
+    
+    [self.view addSubview:_versionLabel];
+}
 -(void) createBg{
     _imageViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_back.png"]];
     [_imageViewBg setContentMode:UIViewContentModeScaleToFill];
+   
     [self.view addSubview:_imageViewBg];
     [ViewAutolayoutCenter persistConstraintRelation:_imageViewBg margins:UIEdgeInsetsMake(0, 0, 0, 0) toItems:nil];
 }
