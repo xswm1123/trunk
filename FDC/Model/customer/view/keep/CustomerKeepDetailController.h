@@ -18,4 +18,5 @@
 @property (weak, nonatomic) IBOutlet UIImageView *photoIV;
 @property (nonatomic,strong) NSString* mark;
 @property (nonatomic,strong) NSString* customerId;
+@property(nonatomic,strong) CustomerEntity* customer;
 @end

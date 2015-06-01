@@ -70,6 +70,23 @@
     self.right_valueLabel.textColor=Rcolor;
     self.right_valueLabel.text=Rvalue;
 }
+-(void)RconfigLabelWithLeftName:(NSString*)Lname leftValue:(NSString*)Lvalue rightName:(NSString*)Rname rightValue:(NSMutableAttributedString*)Rvalue  labelFont:(UIFont*)font LlabelTextColor:(UIColor*) Lcolor RlabelTextColor:(UIColor*) Rcolor{
+    self.left_valueLabel.font=font;
+    self.left_valueLabel.textColor=Lcolor;
+    self.left_valueLabel.text=Lvalue;
+    
+    self.left_nameLabel.font=font;
+    self.left_nameLabel.textColor=Lcolor;
+    self.left_nameLabel.text=Lname;
+    
+    self.right_nameLabel.font=font;
+    self.right_nameLabel.textColor=Rcolor;
+    self.right_nameLabel.text=Rname;
+    
+    self.right_valueLabel.font=font;
+//    self.right_valueLabel.textColor=Rcolor;
+    self.right_valueLabel.attributedText=Rvalue;
+}
 - (void)setProgress:(double)progress
 {
     _progress = progress;

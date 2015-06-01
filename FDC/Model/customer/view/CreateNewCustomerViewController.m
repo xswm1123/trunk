@@ -137,14 +137,15 @@
     self.lb_inertviewAddress.text=[self.inertviewAddress objectAtIndex:0];
 }
 -(void)loadData{
-    UserEntity* user=[ConfigManage getLoginUser];
-    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+      UserEntity* user=[ConfigManage getLoginUser];
     NSData* data=[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",URL_LOGO ,user.logo]]];
     UIImage * image=[UIImage imageWithData:data];
     self.photo.image=image;
-    
-    
-    NSString* vistWay=@"来电";
+}
+-(void)isMustToField{
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSString* vistWay=self.lb_callBackType.text;
     [manager findQuestionaryWithObjectId:user.objectId visitWay:vistWay custormerId:user.userId success:^(id data, NSDictionary *userInfo) {
         
         NSDictionary* dic=(NSDictionary*)data;
@@ -384,7 +385,8 @@
 }
 
 - (IBAction)saveAction:(id)sender {
-    if ([self.mark isEqualToString:@"基本信息"]) {
+    
+    if (self.customerId.length>0||[self.mark isEqualToString:@"基本信息"]) {
         if ([self isValiData]) {
             [Utils showLoading:@"正在提交..."];
             UserEntity*user=[ConfigManage getLoginUser];
@@ -498,7 +500,7 @@
         int result=self.names.count>self.numbers.count?(int)self.names.count:(int)self.numbers.count;
         int finalResult=result>self.IDCards.count?result:(int)self.IDCards.count;
         
-        for (int i=0;i<finalResult-1;i++) {
+        for (int i=0;i<finalResult;i++) {
             NSMutableDictionary* linkers=[NSMutableDictionary dictionary];
             if (self.names.count>=i+1) {
                 UITextField* name=self.names[i];
@@ -525,25 +527,55 @@
         }
         customer.otherConnectionGroups=(NSArray*) linkersArr;
 //        QuestionaryEntity* qentity=[[QuestionaryEntity alloc]init];
-        NSDictionary* dic=[NSDictionary dictionary];
-        if (!self.isMustField) {
-            CustomerMainManager* manager=[[CustomerMainManager alloc]init];
-            [manager persistCustomer:customer Questionnaire:dic CustomerName:self.tf_userName.text CustomerPhone:self.tf_phoneNumber.text ModifyStatu:@"1" success:^(id data, NSDictionary *userInfo) {
-                NSLog(@"data===%@",data);
-                 [PYToast showWithText:@"提交成功!"];
+        NSDictionary* dic_nil=[NSDictionary dictionary];
+        //请求是否需要填写调查表
+        CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+        NSString* vistWay=self.lb_callBackType.text;
+        [manager findQuestionaryWithObjectId:user.objectId visitWay:vistWay custormerId:user.userId success:^(id data, NSDictionary *userInfo) {
+            
+            NSDictionary* dic=(NSDictionary*)data;
+            NSLog(@"SFBT:%@",[dic objectForKey:@"BT_SFBT"]);
+            if (![[dic objectForKey:@"BT_SFBT"] isEqualToString:@"是"]) {
+                self.isMustField=NO;
+                CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+                [manager persistCustomer:customer Questionnaire:dic_nil CustomerName:self.tf_userName.text CustomerPhone:self.tf_phoneNumber.text ModifyStatu:@"1" success:^(id data, NSDictionary *userInfo) {
+                    NSLog(@"data===%@",data);
+                    [PYToast showWithText:@"提交成功!"];
+                    [Utils hiddenLoading];
+                } faild:^(id data, NSDictionary *userInfo) {
+                    NSLog(@"faildData===%@",data);
+                    [Utils hiddenLoading];
+                    [PYToast showWithText:@"提交失败!"];
+                }];
+            }else{
+                self.isMustField=YES;
+                UIAlertView* al=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"该客户需要填写调查表，是否前往？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+                [al show];
                 [Utils hiddenLoading];
-//                [self showCustomerKeeperDetails];
-            } faild:^(id data, NSDictionary *userInfo) {
-                NSLog(@"faildData===%@",data);
-                [Utils hiddenLoading];
-                [PYToast showWithText:@"提交失败!"];
-            }];
-
-        }else{
-            UIAlertView* al=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"该客户需要填写调查表，是否前往？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-            [al show];
+            }
+        } faild:^(id data, NSDictionary *userInfo) {
+            NSLog(@"faildData===%@",data);
             [Utils hiddenLoading];
-        }
+            [PYToast showWithText:@"提交失败!"];
+        }];
+        ///
+//        if (!self.isMustField) {
+//            CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+//            [manager persistCustomer:customer Questionnaire:dic CustomerName:self.tf_userName.text CustomerPhone:self.tf_phoneNumber.text ModifyStatu:@"1" success:^(id data, NSDictionary *userInfo) {
+//                NSLog(@"data===%@",data);
+//                 [PYToast showWithText:@"提交成功!"];
+//                [Utils hiddenLoading];
+//            } faild:^(id data, NSDictionary *userInfo) {
+//                NSLog(@"faildData===%@",data);
+//                [Utils hiddenLoading];
+//                [PYToast showWithText:@"提交失败!"];
+//            }];
+//
+//        }else{
+//            UIAlertView* al=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"该客户需要填写调查表，是否前往？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+//            [al show];
+//            [Utils hiddenLoading];
+//        }
         
         
            }

@@ -191,12 +191,8 @@ static BOOL canSubmit=NO;
                     //                    [subDic removeObjectForKey:@"KH_KHDA"];
                     [dics setObject:subMArr forKey:@"KH_KHDA"];
                 }
-                
             }
         }
-        
-        
-        
     [self createQonScrollView];
     } faild:^(id data, NSDictionary *userInfo) {
         
@@ -486,7 +482,11 @@ static BOOL canSubmit=NO;
         [btn addTarget:self action:@selector(customerSpeciAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.scrollView addSubview:btn];
         [self.QBtns addObject:btn];
-        if (self.isBT) {
+        NSString* isNeed=[dic objectForKey:@"ZD_ISNEED"];
+        NSLog(@"class:%@",NSStringFromClass([isNeed class]));
+        NSString* isnd=[NSString stringWithFormat:@"%@",isNeed];
+        NSLog(@"classd:%@",NSStringFromClass([isnd class]));
+        if ([isnd isEqualToString:@"1"]) {
             UIImageView* imv=[[UIImageView alloc]initWithFrame:CGRectMake(0, bWidth-50, 20, 20)];
             imv.image=[UIImage imageNamed:@"bitian.png"];
             imv.tag=i;
@@ -494,6 +494,7 @@ static BOOL canSubmit=NO;
             [self.mustBtns addObject:imv];
         }
     }
+    self.scrollView.contentSize=CGSizeMake(screenWidth, (bWidth+20)*self.quArr.count/2+bWidth+20);
 }
 - (void)customerSpeciAction:(UIButton*)sender {
     
@@ -599,8 +600,8 @@ static BOOL canSubmit=NO;
 
 -(void)save{
     BOOL isReady=YES;
-    for (UIButton* bts in self.QBtns) {
-        if (!bts.selected) {
+    for (UIImageView* bts in self.mustBtns) {
+        if ([bts.image isEqual:[UIImage imageNamed:@"bitian.png"]]) {
             isReady=NO;
         }
     }
@@ -669,6 +670,7 @@ static BOOL canSubmit=NO;
                 c.entity = entity;
                 c.mark=@"create";
                 c.customerId=(NSString*)data;
+                c.customer=self.customer;
 //                [self goNextController:c];
 //                [self presentViewController:c animated:YES completion:^{
 //                    
@@ -770,8 +772,17 @@ static BOOL canSubmit=NO;
             if (flag) {
                 UIButton* btn=[self.QBtns objectAtIndex:alertView.tag];
                 btn.selected=YES;
-                UIImageView* iv=[self.mustBtns objectAtIndex:alertView.tag];
-                 iv.image=[UIImage imageNamed:@"bitian2.png"];
+                NSArray* arr_views=btn.subviews;
+                for (id vi in arr_views) {
+                    if ([vi isKindOfClass:[UIImageView class]]) {
+                        UIImageView* iv=(UIImageView*)vi;
+                        if (iv.tag==alertView.tag) {
+                             iv.image=[UIImage imageNamed:@"bitian2.png"];
+                        }
+                    }
+                }
+//                UIImageView* iv=[self.mustBtns objectAtIndex:alertView.tag];
+//                 iv.image=[UIImage imageNamed:@"bitian2.png"];
                 [alertView close];
             }else{
                 [Utils showAlert:@"请选择试题选项!" title:@"温馨提示"];

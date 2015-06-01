@@ -44,7 +44,7 @@
 }
 
 -(NSString *)title{
-    return @"客户";
+    return @"客户管理";
 }
 - (IBAction)showNewCustomer:(id)sender {
     CreateNewCustomerViewController* vc=[[CreateNewCustomerViewController alloc]init];

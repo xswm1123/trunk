@@ -99,13 +99,11 @@
          exit(0);
      }];
 }
-
 -(void)logoutAction{
     UIAlertView* al=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"确定要注销此账号？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     al.tag=90;
     [al show];
 }
-
 -(void)selectObejct{
     self.projectNames=nil;
     self.projectNames=[NSMutableArray array];
@@ -139,9 +137,18 @@
     [frm setDateFormat:@"yyyy-MM-dd"];
     NSDate* startDate=[NSDate getFirstDayOfWeek];
     NSDate* endDate=[NSDate getLastDayOfWeek];
-    NSString* start=[frm stringFromDate:startDate];
-    NSString* end=[frm stringFromDate:endDate];
-    [self loadDataWithStartDate:start andEndDate:end];
+    NSString* indexStart=[frm stringFromDate:startDate];
+    NSString* indexEnd=[frm stringFromDate:endDate];
+    NSString* start=self.tempLb1.text;
+    NSString* end=self.tempLb2.text;
+    if ([NSString isEnabled:start]&&[NSString isEnabled:end]) {
+//        [self loadDataWithStartDate:start andEndDate:end];
+        [self checkThisWeekDataWithStartDate:self.customerCount_2.dateFrom endDate:self.customerCount_2.dateTo];
+        [self checkThisWeekDataWithIndex1WithStartDate:self.tradeDoneCount_2.dateFrom endDate:self.tradeDoneCount_2.dateTo];
+        [self checkThisWeekDataWithIndex2WithStartDate:self.financeCount_2.dateFrom endDate:self.financeCount_2.dateTo];
+    }else{
+        [self loadDataWithStartDate:indexStart andEndDate:indexEnd];
+    }
     [self loadMonthPlanDatas];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -192,17 +199,13 @@
             self.tradeDoneCount_2.dateTo=[frm stringFromDate:endDate];
             self.financeCount_2.dateTo=[frm stringFromDate:endDate];
     }
-
-    
     [manager mainForCustomerWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
         NSArray* arr=(NSArray*)data;
         for (LableEntity* label in arr) {
             NSArray* subs=label.subLables;
                         NSLog(@"name===%@,value===%@",label.name,label.value);
-            
-            if ([label.name isEqualToString:@"客户"]) {
                 self.customerCount.sonCnt=label.value;
-                
+                self.customerCount.name=label.name;
                 LableEntity* subLabel1=[subs objectAtIndex:0];
                 self.customerCount_2.firstLb=subLabel1.name;
                 self.customerCount_2.firstLbCount=subLabel1.value;
@@ -217,10 +220,6 @@
                 LableEntity* subLabel4=[subs objectAtIndex:3];
                 self.customerCount_2.forthLb=subLabel4.name;
                 self.customerCount_2.forthLbCount=subLabel4.value;
-                
-            }
-
-
         }
         [self.tableView reloadData];
         [Utils hiddenLoading];
@@ -231,12 +230,9 @@
             NSArray* arr=(NSArray*)data;
         for (LableEntity* label in arr) {
             NSLog(@"name===%@,value===%@",label.name,label.value);
-           
+            self.upComingCount.name=label.name;
                 self.upComingCount.sonCnt=label.value;
                 self.upComeInfos=label.subLables;
-            for (LableEntity* lb in self.upComeInfos) {
-                NSLog(@"subName:%@,subVaule:%@",lb.name,lb.value);
-            }
         }
          [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -247,7 +243,8 @@
         for (LableEntity* label in arr) {
             NSArray* subs=label.subLables;
              NSLog(@"name===%@,value===%@",label.name,label.value);
-            if ([label.name isEqualToString:@"成交"]) {
+           
+                self.tradeDoneCount.name=label.name;
                 self.tradeDoneCount.sonCnt=label.value;
                 
                 LableEntity* subLabel1=[subs objectAtIndex:0];
@@ -264,7 +261,7 @@
                 LableEntity* subLabel4=[subs objectAtIndex:3];
                 self.tradeDoneCount_2.forthLb=subLabel4.name;
                 self.tradeDoneCount_2.forthLbCount=subLabel4.value;
-            }
+            
     }
 
         [self.tableView reloadData];
@@ -277,8 +274,9 @@
         for (LableEntity* label in arr) {
             NSArray* subs=label.subLables;
             NSLog(@"name===%@,value===%@",label.name,label.value);
-                if ([label.name isEqualToString:@"待回款"]) {
+            
                 self.financeCount.sonCnt=label.value;
+                    self.financeCount.name=label.name;
                 
                 LableEntity* subLabel1=[subs objectAtIndex:0];
                 self.financeCount_2.firstLb=subLabel1.name;
@@ -295,7 +293,7 @@
                 self.financeCount_2.forthLb=subLabel4.name;
                 self.financeCount_2.forthLbCount=subLabel4.value;
                 
-            }
+            
         }
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -506,7 +504,6 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return _displayArray.count;
-
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *indentifier = @"level0cell";
@@ -520,7 +517,7 @@
             cell = [[[NSBundle mainBundle] loadNibNamed:@"Level0_Cell" owner:self options:nil] lastObject];
         }
         cell.node = node;
-        [self loadDataForTreeViewCell:cell with:node];//重新给cell装载数据
+        [self loadDataForTreeViewCell:cell with:node index:indexPath.row];//重新给cell装载数据
         [cell setNeedsDisplay]; //重新描绘cell
         return cell;
     }
@@ -530,7 +527,7 @@
             cell = [[[NSBundle mainBundle] loadNibNamed:@"Level1_Cell" owner:self options:nil] lastObject];
         }
         cell.node = node;
-        [self loadDataForTreeViewCell:cell with:node];
+        [self loadDataForTreeViewCell:cell with:node index:indexPath.row];
         [cell setNeedsDisplay];
         return cell;
     }
@@ -540,12 +537,12 @@
             cell = [[[NSBundle mainBundle] loadNibNamed:@"Level2_Cell" owner:self options:nil] lastObject];
         }
         cell.node = node;
-        [self loadDataForTreeViewCell:cell with:node];
+        [self loadDataForTreeViewCell:cell with:node index:indexPath.row];
         [cell setNeedsDisplay];
         return cell;
     }
 }
--(void) loadDataForTreeViewCell:(UITableViewCell*)cell with:(CLTreeViewNode*)node{
+-(void) loadDataForTreeViewCell:(UITableViewCell*)cell with:(CLTreeViewNode*)node index:(NSInteger)index{
     if(node.type == 0){
         CLTreeView_LEVEL0_Model *nodeData = node.nodeData;
         ((CLTreeView_LEVEL0_Cell*)cell).name.text = nodeData.name;
@@ -573,8 +570,6 @@
             //加载图片，这里是同步操作。建议使用SDWebImage异步加载图片
             [((CLTreeView_LEVEL1_Cell*)cell).icon setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:nodeData.headImgUrl]]];
         }
-
-        
     }
     
     else{
@@ -591,9 +586,45 @@
         ((CLTreeView_LEVEL2_Cell*)cell).thirdLbCount.text = nodeData.thirdLbCount;
         ((CLTreeView_LEVEL2_Cell*)cell).forthLbCount.text = nodeData.forthLbCount;
         ((CLTreeView_LEVEL2_Cell*)cell).signture.text = nodeData.signture;
-        [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekData)];
-        [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView)];
-        
+        /**
+         *  分离时间
+         */
+        if (index==2) {
+            [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekData)];
+        }
+        if (index==3) {
+             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekData) forControlEvents:UIControlEventTouchUpInside];
+             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex1)];
+        }
+        if (index==4) {
+             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekData) forControlEvents:UIControlEventTouchUpInside];
+             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex2)];
+        }
+//        [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekData)];
+//        [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView)];
+        if (index==2) {
+//            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView)];
+            
+             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
+        }
+        if (index==3) {
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
+           
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+            
+             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+        }
+        if (index==4) {
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+        }
         if(nodeData.headImgPath != nil){
             //本地图片
             [((CLTreeView_LEVEL2_Cell*)cell).headImg setImage:[UIImage imageNamed:nodeData.headImgPath]];
@@ -605,16 +636,259 @@
     }
 }
 -(void)checkThisWeekData{
-    [self loadDataWithStartDate:@"week" andEndDate:@"week"];
+//    [self loadDataWithStartDate:@"week" andEndDate:@"week"];
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[NSDate getFirstDayOfWeek];
+    NSDate* endDate=[NSDate getLastDayOfWeek];
+    self.customerCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.customerCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager mainForCustomerWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            self.customerCount.sonCnt=label.value;
+            self.customerCount.name=label.name;
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.customerCount_2.firstLb=subLabel1.name;
+            self.customerCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.customerCount_2.secondLb=subLabel2.name;
+            self.customerCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.customerCount_2.thirdLb=subLabel3.name;
+            self.customerCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.customerCount_2.forthLb=subLabel4.name;
+            self.customerCount_2.forthLbCount=subLabel4.value;
+        }
+        [self.tableView reloadData];
+        [Utils hiddenLoading];
+    } faild:^(id data, NSDictionary *userInfo) {
+        [Utils showAlert:@"请求数据失败!" title:@"提示"];
+    }];
+
+}
+-(void)checkThisWeekDataWithStartDate:(NSString*) start endDate:(NSString*)end{
+    //    [self loadDataWithStartDate:@"week" andEndDate:@"week"];
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[frm dateFromString:start];
+    NSDate* endDate=[frm dateFromString:end];
+    self.customerCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.customerCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager mainForCustomerWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            self.customerCount.sonCnt=label.value;
+            self.customerCount.name=label.name;
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.customerCount_2.firstLb=subLabel1.name;
+            self.customerCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.customerCount_2.secondLb=subLabel2.name;
+            self.customerCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.customerCount_2.thirdLb=subLabel3.name;
+            self.customerCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.customerCount_2.forthLb=subLabel4.name;
+            self.customerCount_2.forthLbCount=subLabel4.value;
+        }
+        [self.tableView reloadData];
+        [Utils hiddenLoading];
+    } faild:^(id data, NSDictionary *userInfo) {
+        [Utils showAlert:@"请求数据失败!" title:@"提示"];
+    }];
+    
+}
+-(void)checkThisWeekDataWithIndex1{
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[NSDate getFirstDayOfWeek];
+    NSDate* endDate=[NSDate getLastDayOfWeek];
+    self.tradeDoneCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.tradeDoneCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager tradeDoneCountWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            
+            self.tradeDoneCount.name=label.name;
+            self.tradeDoneCount.sonCnt=label.value;
+            
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.tradeDoneCount_2.firstLb=subLabel1.name;
+            self.tradeDoneCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.tradeDoneCount_2.secondLb=subLabel2.name;
+            self.tradeDoneCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.tradeDoneCount_2.thirdLb=subLabel3.name;
+            self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.tradeDoneCount_2.forthLb=subLabel4.name;
+            self.tradeDoneCount_2.forthLbCount=subLabel4.value;
+            
+        }
+        [self.tableView reloadData];
+    } faild:^(id data, NSDictionary *userInfo) {
+        
+    }];
+
+}
+-(void)checkThisWeekDataWithIndex1WithStartDate:(NSString*) start endDate:(NSString*)end{
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[frm dateFromString:start];
+    NSDate* endDate=[frm dateFromString:end];
+    self.tradeDoneCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.tradeDoneCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager tradeDoneCountWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            
+            self.tradeDoneCount.name=label.name;
+            self.tradeDoneCount.sonCnt=label.value;
+            
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.tradeDoneCount_2.firstLb=subLabel1.name;
+            self.tradeDoneCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.tradeDoneCount_2.secondLb=subLabel2.name;
+            self.tradeDoneCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.tradeDoneCount_2.thirdLb=subLabel3.name;
+            self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.tradeDoneCount_2.forthLb=subLabel4.name;
+            self.tradeDoneCount_2.forthLbCount=subLabel4.value;
+            
+        }
+        [self.tableView reloadData];
+    } faild:^(id data, NSDictionary *userInfo) {
+        
+    }];
+    
+}
+-(void)checkThisWeekDataWithIndex2{
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[NSDate getFirstDayOfWeek];
+    NSDate* endDate=[NSDate getLastDayOfWeek];
+    self.financeCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.financeCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager  financeCountWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            
+            self.financeCount.sonCnt=label.value;
+            self.financeCount.name=label.name;
+            
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.financeCount_2.firstLb=subLabel1.name;
+            self.financeCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.financeCount_2.secondLb=subLabel2.name;
+            self.financeCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.financeCount_2.thirdLb=subLabel3.name;
+            self.financeCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.financeCount_2.forthLb=subLabel4.name;
+            self.financeCount_2.forthLbCount=subLabel4.value;
+            
+            
+        }
+        [self.tableView reloadData];
+    } faild:^(id data, NSDictionary *userInfo) {
+        
+    }];
+
+}
+-(void)checkThisWeekDataWithIndex2WithStartDate:(NSString*) start endDate:(NSString*)end{
+    UserEntity* user=[ConfigManage getLoginUser];
+    CustomerMainManager* manager=[[CustomerMainManager alloc]init];
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[NSLocale currentLocale]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    NSDate* startDate=[frm dateFromString:start];
+    NSDate* endDate=[frm dateFromString:end];
+    self.financeCount_2.dateFrom=[frm stringFromDate:startDate];
+    self.financeCount_2.dateTo=[frm stringFromDate:endDate];
+    [manager  financeCountWithStartTime:startDate endTime:endDate objectId:user.objectId success:^(id data, NSDictionary *userInfo) {
+        NSArray* arr=(NSArray*)data;
+        for (LableEntity* label in arr) {
+            NSArray* subs=label.subLables;
+            NSLog(@"name===%@,value===%@",label.name,label.value);
+            
+            self.financeCount.sonCnt=label.value;
+            self.financeCount.name=label.name;
+            
+            LableEntity* subLabel1=[subs objectAtIndex:0];
+            self.financeCount_2.firstLb=subLabel1.name;
+            self.financeCount_2.firstLbCount=subLabel1.value;
+            
+            LableEntity* subLabel2=[subs objectAtIndex:1];
+            self.financeCount_2.secondLb=subLabel2.name;
+            self.financeCount_2.secondLbCount=subLabel2.value;
+            
+            LableEntity* subLabel3=[subs objectAtIndex:2];
+            self.financeCount_2.thirdLb=subLabel3.name;
+            self.financeCount_2.thirdLbCount=subLabel3.value;
+            LableEntity* subLabel4=[subs objectAtIndex:3];
+            self.financeCount_2.forthLb=subLabel4.name;
+            self.financeCount_2.forthLbCount=subLabel4.value;
+            
+            
+        }
+        [self.tableView reloadData];
+    } faild:^(id data, NSDictionary *userInfo) {
+        
+    }];
+    
 }
 -(void)showAlertView{
-    NSLog(@"showAlertView");
     NSDateFormatter * frm=[[NSDateFormatter alloc]init];
     [frm setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
     [frm setDateFormat:@"yyyy-MM-dd"];
     UIView* backGroundView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 150)];
     backGroundView.backgroundColor=[UIColor whiteColor];
     CustomIOS7AlertView* al=[[CustomIOS7AlertView alloc]init];
+    al.tag=1000;
     al.parentView=self.view;
     UILabel* titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 40)];
     titleLabel.text=@"请选择时间";
@@ -630,6 +904,121 @@
     start.font=[UIFont systemFontOfSize:14.0];
     [backGroundView addSubview:start];
     
+    UILabel* startTF=[[UILabel alloc]initWithFrame:CGRectMake(80, 50, 100, 30)];
+    startTF.font=[UIFont systemFontOfSize:14.0];
+    startTF.tag=100;
+    startTF.text=self.customerCount_2.dateFrom;
+    startTF.userInteractionEnabled=YES;
+    startTF.backgroundColor=[UIColor lightGrayColor];
+    UITapGestureRecognizer* start_tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseDate:)];
+    [startTF addGestureRecognizer:start_tap];
+    [backGroundView addSubview:startTF];
+    self.tempLb1=startTF;
+    
+    UILabel* end=[[UILabel alloc]initWithFrame:CGRectMake(10, 90, 60, 30)];
+    end.text=@"结束时间";
+    end.textAlignment=NSTextAlignmentLeft;
+    end.textColor=[UIColor blackColor];
+    end.font=[UIFont systemFontOfSize:14.0];
+    [backGroundView addSubview:end];
+    
+    UILabel* endTF=[[UILabel alloc]initWithFrame:CGRectMake(80, 90, 100, 30)];
+    endTF.tag=200;
+    endTF.text=self.customerCount_2.dateTo;
+    endTF.font=[UIFont systemFontOfSize:14.0];
+    endTF.userInteractionEnabled=YES;
+    endTF.backgroundColor=[UIColor lightGrayColor];
+    UITapGestureRecognizer* end_tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseDate:)];
+    [endTF addGestureRecognizer:end_tap];
+    [backGroundView addSubview:endTF];
+    self.tempLb2=endTF;
+    
+    al.containerView=backGroundView;
+    NSArray* titles=@[@"关闭",@"查询"];
+    al.buttonTitles=titles;
+    al.delegate=self;
+    [al show];
+}
+-(void)showAlertViewWithIndex1{
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    UIView* backGroundView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 150)];
+    backGroundView.backgroundColor=[UIColor whiteColor];
+    CustomIOS7AlertView* al=[[CustomIOS7AlertView alloc]init];
+    al.tag=1001;
+    al.parentView=self.view;
+    UILabel* titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 40)];
+    titleLabel.text=@"请选择时间";
+    titleLabel.textAlignment=NSTextAlignmentCenter;
+    titleLabel.backgroundColor=[UIColor colorWithRed:0.396 green:0.788 blue:0.996 alpha:1];
+    titleLabel.textColor=[UIColor whiteColor];
+    [backGroundView addSubview:titleLabel];
+    
+    UILabel* start=[[UILabel alloc]initWithFrame:CGRectMake(10, 50, 60, 30)];
+    start.text=@"开始时间";
+    start.textAlignment=NSTextAlignmentLeft;
+    start.textColor=[UIColor blackColor];
+    start.font=[UIFont systemFontOfSize:14.0];
+    [backGroundView addSubview:start];
+    
+    UILabel* startTF=[[UILabel alloc]initWithFrame:CGRectMake(80, 50, 100, 30)];
+    startTF.font=[UIFont systemFontOfSize:14.0];
+    startTF.tag=100;
+    startTF.text=self.customerCount_2.dateFrom;
+    startTF.userInteractionEnabled=YES;
+    startTF.backgroundColor=[UIColor lightGrayColor];
+    UITapGestureRecognizer* start_tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseDate:)];
+    [startTF addGestureRecognizer:start_tap];
+    [backGroundView addSubview:startTF];
+    self.tempLb1=startTF;
+    
+    UILabel* end=[[UILabel alloc]initWithFrame:CGRectMake(10, 90, 60, 30)];
+    end.text=@"结束时间";
+    end.textAlignment=NSTextAlignmentLeft;
+    end.textColor=[UIColor blackColor];
+    end.font=[UIFont systemFontOfSize:14.0];
+    [backGroundView addSubview:end];
+    
+    UILabel* endTF=[[UILabel alloc]initWithFrame:CGRectMake(80, 90, 100, 30)];
+    endTF.tag=200;
+    endTF.text=self.customerCount_2.dateTo;
+    endTF.font=[UIFont systemFontOfSize:14.0];
+    endTF.userInteractionEnabled=YES;
+    endTF.backgroundColor=[UIColor lightGrayColor];
+    UITapGestureRecognizer* end_tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseDate:)];
+    [endTF addGestureRecognizer:end_tap];
+    [backGroundView addSubview:endTF];
+    self.tempLb2=endTF;
+    
+    al.containerView=backGroundView;
+    NSArray* titles=@[@"关闭",@"查询"];
+    al.buttonTitles=titles;
+    al.delegate=self;
+    [al show];
+}
+-(void)showAlertViewWithIndex2{
+    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+    [frm setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
+    [frm setDateFormat:@"yyyy-MM-dd"];
+    UIView* backGroundView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 150)];
+    backGroundView.backgroundColor=[UIColor whiteColor];
+    CustomIOS7AlertView* al=[[CustomIOS7AlertView alloc]init];
+    al.tag=1002;
+    al.parentView=self.view;
+    UILabel* titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 40)];
+    titleLabel.text=@"请选择时间";
+    titleLabel.textAlignment=NSTextAlignmentCenter;
+    titleLabel.backgroundColor=[UIColor colorWithRed:0.396 green:0.788 blue:0.996 alpha:1];
+    titleLabel.textColor=[UIColor whiteColor];
+    [backGroundView addSubview:titleLabel];
+    
+    UILabel* start=[[UILabel alloc]initWithFrame:CGRectMake(10, 50, 60, 30)];
+    start.text=@"开始时间";
+    start.textAlignment=NSTextAlignmentLeft;
+    start.textColor=[UIColor blackColor];
+    start.font=[UIFont systemFontOfSize:14.0];
+    [backGroundView addSubview:start];
     
     UILabel* startTF=[[UILabel alloc]initWithFrame:CGRectMake(80, 50, 100, 30)];
     startTF.font=[UIFont systemFontOfSize:14.0];
@@ -735,20 +1124,38 @@
         NSArray* arr=alertView.containerView.subviews;
         for (UIView *view in arr) {
             if (view.tag==100) {
-                self.customerCount_2.dateFrom=((UILabel*)view).text;
-                 self.tradeDoneCount_2.dateFrom=((UILabel*)view).text;
-                 self.financeCount_2.dateFrom=((UILabel*)view).text;
+                if (alertView.tag==1000) {
+                     self.customerCount_2.dateFrom=((UILabel*)view).text;
+                }
+                if (alertView.tag==1001) {
+                    self.tradeDoneCount_2.dateFrom=((UILabel*)view).text;
+                }
+                if (alertView.tag==1002) {
+                    self.financeCount_2.dateFrom=((UILabel*)view).text;
+                }
                 }
             if (view.tag==200) {
-                self.customerCount_2.dateTo=((UILabel*)view).text;
-                self.tradeDoneCount_2.dateTo=((UILabel*)view).text;
-                self.financeCount_2.dateTo=((UILabel*)view).text;
+                if (alertView.tag==1000) {
+                    self.customerCount_2.dateTo=((UILabel*)view).text;
+                    [self checkThisWeekDataWithStartDate:self.customerCount_2.dateFrom endDate:self.customerCount_2.dateTo];
+                }
+                if (alertView.tag==1001) {
+                     self.tradeDoneCount_2.dateTo=((UILabel*)view).text;
+                    [self checkThisWeekDataWithIndex1WithStartDate: self.tradeDoneCount_2.dateFrom endDate: self.tradeDoneCount_2.dateTo];
+                }
+                if (alertView.tag==1002) {
+                    self.financeCount_2.dateTo=((UILabel*)view).text;
+                    [self checkThisWeekDataWithIndex2WithStartDate: self.financeCount_2.dateFrom endDate: self.financeCount_2.dateTo];
+                }
             }
         }
-
-        [self loadDataWithStartDate: self.customerCount_2.dateFrom andEndDate:self.customerCount_2.dateTo];
+        /**
+         *  这里需要重新改造
+         */
+//        [self loadDataWithStartDate: self.customerCount_2.dateFrom andEndDate:self.customerCount_2.dateTo];
         [self.tableView reloadData];
         [alertView close];
+        
     }
 
 }
@@ -773,7 +1180,7 @@
         }
     }
     CLTreeView_LEVEL1_Model* model=node.nodeData;
-    if ([model.name isEqualToString:@"待办事宜:"]) {
+    if ([model.name isEqualToString:self.upComingCount.name]) {
         [self showUpComingWorkDetails];
     }
     
@@ -841,8 +1248,6 @@
     _displayArray = [NSArray arrayWithArray:tmp];
     [self.tableView reloadData];
 }
-
-
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
  CLTreeViewNode *node = [_displayArray objectAtIndex:indexPath.row];
     if (node.type==2) {
@@ -858,6 +1263,4 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.1;
 }
-
-
 @end

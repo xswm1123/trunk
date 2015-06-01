@@ -151,13 +151,13 @@
     user.objectId=[self.projectIds objectAtIndex:anIndex];
     user.businessSimpleName=[self.JCs objectAtIndex:anIndex];
     [ConfigManage setLoginUser:user];
-    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
-    [frm setDateFormat:@"yyyy-MM-dd"];
-    NSDate* startDate=[NSDate new];
-    NSString* start=[frm stringFromDate:startDate];
-    self.fromDate.text=start;
-    self.toDate.text=start;
-    [self loadDataWithStartDate:start EndDate:start];
+//    NSDateFormatter * frm=[[NSDateFormatter alloc]init];
+//    [frm setDateFormat:@"yyyy-MM-dd"];
+//    NSDate* startDate=[NSDate new];
+//    NSString* start=[frm stringFromDate:startDate];
+//    self.fromDate.text=start;
+//    self.toDate.text=start;
+    [self loadDataWithStartDate:self.fromDate.text EndDate:self.toDate.text];
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (alertView.tag==90) {
@@ -340,31 +340,31 @@
             if (customers.count>0) {
         // 来电  来访
         NSDictionary* phoneComeIn=[customers objectAtIndex:0];
-        [self.phoneIn configLabelWithLeftName:@"来电" leftValue:nil rightName:nil rightValue:[phoneComeIn objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+        [self.phoneIn configLabelWithLeftName:[phoneComeIn objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[phoneComeIn objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
                 if (customers.count>=2) {
         NSDictionary* interView=[customers objectAtIndex:1];
-         [self.visit configLabelWithLeftName:@"来访" leftValue:nil rightName:nil rightValue:[interView objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+         [self.visit configLabelWithLeftName:[interView objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[interView objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
         //认购 签约
                     if (customers.count>=3) {
         NSDictionary* sureBuy=[customers objectAtIndex:2];
-        [self.sureBuy configLabelWithLeftName:@"认购" leftValue:nil rightName:nil rightValue:[sureBuy objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+        [self.sureBuy configLabelWithLeftName:[sureBuy objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[sureBuy objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
                         if (customers.count>=4) {
         NSDictionary* sign=[customers objectAtIndex:3];
-        [self.contactBuy configLabelWithLeftName:@"契约" leftValue:nil rightName:nil rightValue:[sign objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+        [self.contactBuy configLabelWithLeftName:[sign objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[sign objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
         //认购签约 金额
                             if (customers.count>=5) {
         NSDictionary* sureBuyCount=[customers objectAtIndex:4];
-                                [self.sureCount configLabelWithLeftName:@"认购金额" leftValue:nil rightName:nil rightValue:[sureBuyCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+                                [self.sureCount configLabelWithLeftName:[sureBuyCount objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[sureBuyCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
                                 if (customers.count>=6) {
         NSDictionary* signCount=[customers objectAtIndex:5];
-        [self.contactCount configLabelWithLeftName:@"契约金额" leftValue:nil rightName:nil rightValue:[signCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+        [self.contactCount configLabelWithLeftName:[signCount objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[signCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
              //实收  应收
                                     if (customers.count>=7) {
         NSDictionary* realCount=[customers objectAtIndex:6];
-                                         [self.shouldPay configLabelWithLeftName:@"应收款" leftValue:nil rightName:nil rightValue:[realCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+                                         [self.shouldPay configLabelWithLeftName:[realCount objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[realCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
                                         if (customers.count>=8) {
         NSDictionary* shouldCount=[customers objectAtIndex:7];
-        [self.accturllyPay configLabelWithLeftName:@"实收款" leftValue:nil rightName:nil rightValue:[shouldCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
+        [self.accturllyPay configLabelWithLeftName:[shouldCount objectForKey:@"ZD_ZDMC"] leftValue:nil rightName:nil rightValue:[shouldCount objectForKey:@"ZD_ZDVAL"] labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor whiteColor] RlabelTextColor:[UIColor whiteColor]];
                                              }//end >=8
                                         }//end >=7
                                     }//end >=6
@@ -418,27 +418,51 @@
             NSDictionary* four=[plans objectAtIndex:3];
             NSString* value_four=[four objectForKey:@"ZD_ZDVAL"];
             NSString* name_four=[four objectForKey:@"ZD_ZDMC"];
-            [self.forthSeasonView configLabelWithLeftName:name_four leftValue:nil rightName:nil rightValue:value_four labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
+                NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:value_four];
+                NSRange markRange=[value_four rangeOfString:@"|"];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0,markRange.location)];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:markRange];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(markRange.location+1,value_four.length-1-markRange.location)];
+                
+                
+            [self.forthSeasonView RconfigLabelWithLeftName:name_four leftValue:nil rightName:nil rightValue:str labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
                 }// end >3
             if (plans.count>2) {
                 //三季度
                 NSDictionary* three=[plans objectAtIndex:2];
                 NSString* value_three=[three objectForKey:@"ZD_ZDVAL"];
                 NSString* name_three=[three objectForKey:@"ZD_ZDMC"];
-                [self.thirdSeasonView configLabelWithLeftName:name_three leftValue:nil rightName:nil rightValue:value_three labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
+                NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:value_three];
+                NSRange markRange=[value_three rangeOfString:@"|"];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0,markRange.location)];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:markRange];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(markRange.location+1,value_three.length-1-markRange.location)];
+                [self.thirdSeasonView RconfigLabelWithLeftName:name_three leftValue:nil rightName:nil rightValue:str labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
             }// end>2
             if (plans.count>1) {
                 //二季度
                 NSDictionary* two=[plans objectAtIndex:1];
                 NSString* value_two=[two objectForKey:@"ZD_ZDVAL"];
                 NSString* name_two=[two objectForKey:@"ZD_ZDMC"];
-                [self.secondSeasonView configLabelWithLeftName:name_two leftValue:nil rightName:nil rightValue:value_two labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
+                NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:value_two];
+                NSRange markRange=[value_two rangeOfString:@"|"];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0,markRange.location)];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:markRange];
+                [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(markRange.location+1,value_two.length-1-markRange.location)];
+                
+                [self.secondSeasonView RconfigLabelWithLeftName:name_two leftValue:nil rightName:nil rightValue:str labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
             }// end>1
             //一季度
             NSDictionary* one=[plans objectAtIndex:0];
             NSString* value_one=[one objectForKey:@"ZD_ZDVAL"];
             NSString* name_one=[one objectForKey:@"ZD_ZDMC"];
-            [self.firstSeasonView configLabelWithLeftName:name_one leftValue:nil rightName:nil rightValue:value_one labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
+            NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:value_one];
+            NSRange markRange=[value_one rangeOfString:@"|"];
+            [str addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0,markRange.location)];
+            [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:markRange];
+            [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(markRange.location+1,value_one.length-1-markRange.location)];
+            
+            [self.firstSeasonView RconfigLabelWithLeftName:name_one leftValue:nil rightName:nil rightValue:str labelFont: [UIFont systemFontOfSize:16] LlabelTextColor:[UIColor blackColor] RlabelTextColor:[UIColor blackColor]];
         }//end plans.count>0
                 }//end datas.count>0
             

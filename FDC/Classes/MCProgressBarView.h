@@ -17,4 +17,5 @@
 @property (nonatomic,strong) UILabel * moneyPercentLabel;
 
 -(void)configLabelWithLeftName:(NSString*)Lname leftValue:(NSString*)Lvalue rightName:(NSString*)Rname rightValue:(NSString*)Rvalue  labelFont:(UIFont*)font LlabelTextColor:(UIColor*) Lcolor RlabelTextColor:(UIColor*) Rcolor;
+-(void)RconfigLabelWithLeftName:(NSString*)Lname leftValue:(NSString*)Lvalue rightName:(NSString*)Rname rightValue:(NSMutableAttributedString*)Rvalue  labelFont:(UIFont*)font LlabelTextColor:(UIColor*) Lcolor RlabelTextColor:(UIColor*) Rcolor;
 @end

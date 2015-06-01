@@ -109,7 +109,7 @@ static NSInteger pressBtnCounts;
     cell.birthDate.text=[dic objectForKey:@"KH_KHSR"];
     cell.payStatus.text=[dic objectForKey:@"HT_HTLX"];
     cell.mindLevel.text=[dic objectForKey:@"KH_YXCD"];
-    cell.phoneNumber=[dic objectForKey:@"KH_MOBILE"];
+    cell.phoneNumber=[dic objectForKey:@"KH_LXDH"];
     cell.sex=[dic objectForKey:@"KH_KHXB"];
     return cell;
 }

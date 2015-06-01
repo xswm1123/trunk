@@ -96,6 +96,7 @@
     vc.title=@"调查表";
     vc.index=2;
     vc.customerInfo=self.entity;
+    vc.customer=self.customer;
     vc.mark=self.mark;
     [self.navigationController pushViewController:vc animated:YES];
 }
