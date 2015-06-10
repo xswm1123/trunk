@@ -98,7 +98,7 @@
     }
     _versionLabel.text=[NSString stringWithFormat:@"V%@",[FDCController shareInstance].currentVersion];
     if (!_versionLabel.text.length>0) {
-        _versionLabel.text=@"V1.5.1";
+        _versionLabel.text=@"V1.1.2";
     }
     _versionLabel.font=[UIFont systemFontOfSize:15.0];
 //    [self.view insertSubview:_versionLabel aboveSubview:_imageViewBg];

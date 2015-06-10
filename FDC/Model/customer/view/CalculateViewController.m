@@ -288,7 +288,7 @@
         }else{
         vc.discountCount=@"100.0";
         vc.actCount=[NSString stringWithFormat:@"%.2f",[[self.CalculateDic objectForKey:@"FW_FWZJ"] floatValue]/10000.0 ];
-
+            vc.firstCount=@"0";
         }
             [self.navigationController pushViewController:vc animated:YES];
   

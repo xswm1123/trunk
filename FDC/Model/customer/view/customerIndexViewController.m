@@ -207,19 +207,19 @@
                 self.customerCount.sonCnt=label.value;
                 self.customerCount.name=label.name;
                 LableEntity* subLabel1=[subs objectAtIndex:0];
-                self.customerCount_2.firstLb=subLabel1.name;
-                self.customerCount_2.firstLbCount=subLabel1.value;
-                
+                self.customerCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
+//                self.customerCount_2.firstLbCount=subLabel1.value;
+            
                 LableEntity* subLabel2=[subs objectAtIndex:1];
-                self.customerCount_2.secondLb=subLabel2.name;
-                self.customerCount_2.secondLbCount=subLabel2.value;
-                
+                self.customerCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
+//                self.customerCount_2.secondLbCount=subLabel2.value;
+            
                 LableEntity* subLabel3=[subs objectAtIndex:2];
-                self.customerCount_2.thirdLb=subLabel3.name;
-                self.customerCount_2.thirdLbCount=subLabel3.value;
+                self.customerCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
+//                self.customerCount_2.thirdLbCount=subLabel3.value;
                 LableEntity* subLabel4=[subs objectAtIndex:3];
-                self.customerCount_2.forthLb=subLabel4.name;
-                self.customerCount_2.forthLbCount=subLabel4.value;
+                self.customerCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
+//                self.customerCount_2.forthLbCount=subLabel4.value;
         }
         [self.tableView reloadData];
         [Utils hiddenLoading];
@@ -248,22 +248,20 @@
                 self.tradeDoneCount.sonCnt=label.value;
                 
                 LableEntity* subLabel1=[subs objectAtIndex:0];
-                self.tradeDoneCount_2.firstLb=subLabel1.name;
-                self.tradeDoneCount_2.firstLbCount=subLabel1.value;
-                
-                LableEntity* subLabel2=[subs objectAtIndex:1];
-                self.tradeDoneCount_2.secondLb=subLabel2.name;
-                self.tradeDoneCount_2.secondLbCount=subLabel2.value;
-                
-                LableEntity* subLabel3=[subs objectAtIndex:2];
-                self.tradeDoneCount_2.thirdLb=subLabel3.name;
-                self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
-                LableEntity* subLabel4=[subs objectAtIndex:3];
-                self.tradeDoneCount_2.forthLb=subLabel4.name;
-                self.tradeDoneCount_2.forthLbCount=subLabel4.value;
+                self.tradeDoneCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
+//                self.tradeDoneCount_2.firstLbCount=subLabel1.value;
             
+                LableEntity* subLabel2=[subs objectAtIndex:1];
+                self.tradeDoneCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
+//                self.tradeDoneCount_2.secondLbCount=subLabel2.value;
+            
+                LableEntity* subLabel3=[subs objectAtIndex:2];
+                self.tradeDoneCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
+//                self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
+                LableEntity* subLabel4=[subs objectAtIndex:3];
+                self.tradeDoneCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
+//                self.tradeDoneCount_2.forthLbCount=subLabel4.value;
     }
-
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
         
@@ -279,20 +277,20 @@
                     self.financeCount.name=label.name;
                 
                 LableEntity* subLabel1=[subs objectAtIndex:0];
-                self.financeCount_2.firstLb=subLabel1.name;
-                self.financeCount_2.firstLbCount=subLabel1.value;
-                
+                self.financeCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
+//                self.financeCount_2.firstLbCount=subLabel1.value;
+            
                 LableEntity* subLabel2=[subs objectAtIndex:1];
-                self.financeCount_2.secondLb=subLabel2.name;
-                self.financeCount_2.secondLbCount=subLabel2.value;
-                
+                self.financeCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
+//                self.financeCount_2.secondLbCount=subLabel2.value;
+            
                 LableEntity* subLabel3=[subs objectAtIndex:2];
-                self.financeCount_2.thirdLb=subLabel3.name;
-                self.financeCount_2.thirdLbCount=subLabel3.value;
+                self.financeCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
+//                self.financeCount_2.thirdLbCount=subLabel3.value;
                 LableEntity* subLabel4=[subs objectAtIndex:3];
-                self.financeCount_2.forthLb=subLabel4.name;
-                self.financeCount_2.forthLbCount=subLabel4.value;
-                
+                self.financeCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
+//                self.financeCount_2.forthLbCount=subLabel4.value;
+            
             
         }
         [self.tableView reloadData];
@@ -571,7 +569,6 @@
             [((CLTreeView_LEVEL1_Cell*)cell).icon setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:nodeData.headImgUrl]]];
         }
     }
-    
     else{
         CLTreeView_LEVEL2_Model *nodeData = node.nodeData;
         ((CLTreeView_LEVEL2_Cell*)cell).name.text = nodeData.name;
@@ -586,6 +583,8 @@
         ((CLTreeView_LEVEL2_Cell*)cell).thirdLbCount.text = nodeData.thirdLbCount;
         ((CLTreeView_LEVEL2_Cell*)cell).forthLbCount.text = nodeData.forthLbCount;
         ((CLTreeView_LEVEL2_Cell*)cell).signture.text = nodeData.signture;
+        NSInteger cellCount=[self tableView:self.tableView numberOfRowsInSection:0];
+        NSLog(@"tableView.count:%d",[self tableView:self.tableView numberOfRowsInSection:0]);
         /**
          *  分离时间
          */
@@ -599,16 +598,28 @@
              [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex2) forControlEvents:UIControlEventTouchUpInside];
             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex1)];
         }
+        /**
+         *  处理特殊的index=4;
+         */
         if (index==4) {
+            if (cellCount==5) {
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekData) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex2)];
+            }
+            if (cellCount==6) {
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekData) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex1)];
+            }
+        }
+        if (index==5||index==6) {
              [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekData) forControlEvents:UIControlEventTouchUpInside];
              [((CLTreeView_LEVEL2_Cell*)cell).todayBtn removeTarget:self action:@selector(checkThisWeekDataWithIndex1) forControlEvents:UIControlEventTouchUpInside];
             [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekDataWithIndex2)];
         }
-//        [((CLTreeView_LEVEL2_Cell*)cell).todayBtn addTarget:self action:@selector(checkThisWeekData)];
-//        [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView)];
+
         if (index==2) {
-//            [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView)];
-            
              [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
              [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
@@ -620,7 +631,25 @@
             
              [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
         }
+        /**
+         *  处理特殊的index=4;
+         */
         if (index==4) {
+            if (cellCount==5) {
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+            }
+            if (cellCount==6) {
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
+                
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
+                
+                [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+        
+        if (index==5||index==6) {
             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertView) forControlEvents:UIControlEventTouchUpInside];
             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn removeTarget:self action:@selector(showAlertViewWithIndex1) forControlEvents:UIControlEventTouchUpInside];
             [((CLTreeView_LEVEL2_Cell*)cell).customerBtn addTarget:self action:@selector(showAlertViewWithIndex2) forControlEvents:UIControlEventTouchUpInside];
@@ -654,19 +683,13 @@
             self.customerCount.sonCnt=label.value;
             self.customerCount.name=label.name;
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.customerCount_2.firstLb=subLabel1.name;
-            self.customerCount_2.firstLbCount=subLabel1.value;
-            
+            self.customerCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.customerCount_2.secondLb=subLabel2.name;
-            self.customerCount_2.secondLbCount=subLabel2.value;
-            
+            self.customerCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.customerCount_2.thirdLb=subLabel3.name;
-            self.customerCount_2.thirdLbCount=subLabel3.value;
+            self.customerCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.customerCount_2.forthLb=subLabel4.name;
-            self.customerCount_2.forthLbCount=subLabel4.value;
+            self.customerCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
         [Utils hiddenLoading];
@@ -676,7 +699,6 @@
 
 }
 -(void)checkThisWeekDataWithStartDate:(NSString*) start endDate:(NSString*)end{
-    //    [self loadDataWithStartDate:@"week" andEndDate:@"week"];
     UserEntity* user=[ConfigManage getLoginUser];
     CustomerMainManager* manager=[[CustomerMainManager alloc]init];
     NSDateFormatter * frm=[[NSDateFormatter alloc]init];
@@ -694,19 +716,13 @@
             self.customerCount.sonCnt=label.value;
             self.customerCount.name=label.name;
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.customerCount_2.firstLb=subLabel1.name;
-            self.customerCount_2.firstLbCount=subLabel1.value;
-            
+            self.customerCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.customerCount_2.secondLb=subLabel2.name;
-            self.customerCount_2.secondLbCount=subLabel2.value;
-            
+            self.customerCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.customerCount_2.thirdLb=subLabel3.name;
-            self.customerCount_2.thirdLbCount=subLabel3.value;
+            self.customerCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.customerCount_2.forthLb=subLabel4.name;
-            self.customerCount_2.forthLbCount=subLabel4.value;
+            self.customerCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
         [Utils hiddenLoading];
@@ -735,20 +751,13 @@
             self.tradeDoneCount.sonCnt=label.value;
             
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.tradeDoneCount_2.firstLb=subLabel1.name;
-            self.tradeDoneCount_2.firstLbCount=subLabel1.value;
-            
+            self.tradeDoneCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.tradeDoneCount_2.secondLb=subLabel2.name;
-            self.tradeDoneCount_2.secondLbCount=subLabel2.value;
-            
+            self.tradeDoneCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.tradeDoneCount_2.thirdLb=subLabel3.name;
-            self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
+            self.tradeDoneCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.tradeDoneCount_2.forthLb=subLabel4.name;
-            self.tradeDoneCount_2.forthLbCount=subLabel4.value;
-            
+            self.tradeDoneCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -776,20 +785,13 @@
             self.tradeDoneCount.sonCnt=label.value;
             
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.tradeDoneCount_2.firstLb=subLabel1.name;
-            self.tradeDoneCount_2.firstLbCount=subLabel1.value;
-            
+            self.tradeDoneCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.tradeDoneCount_2.secondLb=subLabel2.name;
-            self.tradeDoneCount_2.secondLbCount=subLabel2.value;
-            
+            self.tradeDoneCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.tradeDoneCount_2.thirdLb=subLabel3.name;
-            self.tradeDoneCount_2.thirdLbCount=subLabel3.value;
+            self.tradeDoneCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.tradeDoneCount_2.forthLb=subLabel4.name;
-            self.tradeDoneCount_2.forthLbCount=subLabel4.value;
-            
+            self.tradeDoneCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -815,23 +817,14 @@
             
             self.financeCount.sonCnt=label.value;
             self.financeCount.name=label.name;
-            
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.financeCount_2.firstLb=subLabel1.name;
-            self.financeCount_2.firstLbCount=subLabel1.value;
-            
+            self.financeCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.financeCount_2.secondLb=subLabel2.name;
-            self.financeCount_2.secondLbCount=subLabel2.value;
-            
+            self.financeCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.financeCount_2.thirdLb=subLabel3.name;
-            self.financeCount_2.thirdLbCount=subLabel3.value;
+            self.financeCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.financeCount_2.forthLb=subLabel4.name;
-            self.financeCount_2.forthLbCount=subLabel4.value;
-            
-            
+            self.financeCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -859,21 +852,13 @@
             self.financeCount.name=label.name;
             
             LableEntity* subLabel1=[subs objectAtIndex:0];
-            self.financeCount_2.firstLb=subLabel1.name;
-            self.financeCount_2.firstLbCount=subLabel1.value;
-            
+            self.financeCount_2.firstLb=[NSString stringWithFormat:@"%@ %@",subLabel1.name,subLabel1.value];
             LableEntity* subLabel2=[subs objectAtIndex:1];
-            self.financeCount_2.secondLb=subLabel2.name;
-            self.financeCount_2.secondLbCount=subLabel2.value;
-            
+            self.financeCount_2.secondLb=[NSString stringWithFormat:@"%@ %@",subLabel2.name,subLabel2.value];
             LableEntity* subLabel3=[subs objectAtIndex:2];
-            self.financeCount_2.thirdLb=subLabel3.name;
-            self.financeCount_2.thirdLbCount=subLabel3.value;
+            self.financeCount_2.thirdLb=[NSString stringWithFormat:@"%@ %@",subLabel3.name,subLabel3.value];
             LableEntity* subLabel4=[subs objectAtIndex:3];
-            self.financeCount_2.forthLb=subLabel4.name;
-            self.financeCount_2.forthLbCount=subLabel4.value;
-            
-            
+            self.financeCount_2.forthLb=[NSString stringWithFormat:@"%@ %@",subLabel4.name,subLabel4.value];
         }
         [self.tableView reloadData];
     } faild:^(id data, NSDictionary *userInfo) {
@@ -1159,10 +1144,9 @@
     }
 
 }
-
-/*---------------------------------------
+/*
  处理cell选中事件，需要自定义的部分
- --------------------------------------- */
+ */
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     CLTreeViewNode *node = [_displayArray objectAtIndex:indexPath.row];
@@ -1185,19 +1169,18 @@
     }
     
 }
-
-/*---------------------------------------
+/*
  旋转箭头图标
- --------------------------------------- */
+ */
 -(void) rotateArrow:(CLTreeView_LEVEL0_Cell*) cell with:(double)degree{
     [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
         cell.arrowView.layer.transform = CATransform3DMakeRotation(degree, 0, 0, 1);
     } completion:NULL];
 }
 
-/*---------------------------------------
+/*
  初始化将要显示的cell的数据
- --------------------------------------- */
+ */
 -(void) reloadDataForDisplayArray{
     NSMutableArray *tmp = [[NSMutableArray alloc]init];
     for (CLTreeViewNode *node in _dataArray) {
@@ -1217,9 +1200,9 @@
     [self.tableView reloadData];
 }
 
-/*---------------------------------------
+/*
  修改cell的状态(关闭或打开)
- --------------------------------------- */
+ */
 -(void) reloadDataForDisplayArrayChangeAt:(NSInteger)row{
     NSMutableArray *tmp = [[NSMutableArray alloc]init];
     NSInteger cnt=0;

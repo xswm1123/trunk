@@ -11,6 +11,10 @@
 #import "CustomerMainManager.h"
 
 @interface QuestionnaireViewController ()<UIPickerViewDataSource,UIPickerViewDelegate>
+{
+    UIScrollView * scrollView_bg;
+    BOOL flag;
+}
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segementControl;
 @property (weak, nonatomic) IBOutlet UIView *bgView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -33,6 +37,7 @@
 @property (nonatomic,strong) NSMutableDictionary* QAnwsers;
 @property (nonatomic,strong) NSDictionary * submitDic;
 @property(nonatomic,strong) NSMutableArray* anwsersArr;
+@property (nonatomic,assign) CGFloat maxHeight;
 @end
 
 static BOOL canSubmit=NO;
@@ -143,7 +148,7 @@ static BOOL canSubmit=NO;
     CustomerMainManager* manager=[[CustomerMainManager alloc]init];
     NSString* vistWay=@"来电";
     NSString* cusid;
-    if (![self.mark isEqualToString:@"create"]) {
+    if (![self.mark isEqualToString:@"create"]||[self.mark isEqualToString:@"created"]) {
         cusid=self.customerInfo.customerId;
         vistWay=self.customerInfo.visitWay;
     }else{
@@ -443,7 +448,6 @@ static BOOL canSubmit=NO;
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     NSLog(@"GGGGGGG");
-    
 }
 -(void)createQonScrollView{
     self.mustBtns=nil;
@@ -461,20 +465,13 @@ static BOOL canSubmit=NO;
         btn.tag=i;
         UIImageView* image=[[UIImageView alloc]initWithFrame:CGRectMake(20, 20, bWidth-40, bWidth-50)];
         image.image=[UIImage imageNamed:@"image_customerQU.png"];
+        image.tag=-1;
         [btn addSubview:image];
         UILabel* label=[[UILabel alloc]initWithFrame:CGRectMake(0, bWidth-30, bWidth, 30)];
         label.textAlignment=NSTextAlignmentCenter;
         label.textColor=[UIColor whiteColor];
         label.font=[UIFont systemFontOfSize:13.0];
         NSDictionary* dic=[self.quArr objectAtIndex:i];
-        NSArray* options=[dic objectForKey:@"ST_ARRY"];
-        for (int i=0; i<options.count; i++) {
-            NSDictionary* option=[options objectAtIndex:i];
-            if ([[option objectForKey:@"SF_SFXZ"] isEqualToString:@"是"]) {
-                btn.selected=YES;
-                }
-            }
-
         //======================================
         NSString* title=[dic objectForKey:@"ZD_XMMC"];
         label.text=title;
@@ -483,9 +480,9 @@ static BOOL canSubmit=NO;
         [self.scrollView addSubview:btn];
         [self.QBtns addObject:btn];
         NSString* isNeed=[dic objectForKey:@"ZD_ISNEED"];
-        NSLog(@"class:%@",NSStringFromClass([isNeed class]));
+        
         NSString* isnd=[NSString stringWithFormat:@"%@",isNeed];
-        NSLog(@"classd:%@",NSStringFromClass([isnd class]));
+        
         if ([isnd isEqualToString:@"1"]) {
             UIImageView* imv=[[UIImageView alloc]initWithFrame:CGRectMake(0, bWidth-50, 20, 20)];
             imv.image=[UIImage imageNamed:@"bitian.png"];
@@ -493,17 +490,53 @@ static BOOL canSubmit=NO;
             [btn addSubview:imv];
             [self.mustBtns addObject:imv];
         }
+        //=======
+        NSArray* options=[dic objectForKey:@"ST_ARRY"];
+        for (int j=0; j<options.count; j++) {
+            NSDictionary* option=[options objectAtIndex:j];
+            if ([[option objectForKey:@"SF_SFXZ"] isEqualToString:@"是"]) {
+                btn.selected=YES;
+                for (UIImageView* bts in self.mustBtns) {
+                    if (bts.tag==i) {
+                        bts.image=[UIImage imageNamed:@"bitian2.png"];
+                    }
+                }
+            }
+        }
     }
     self.scrollView.contentSize=CGSizeMake(screenWidth, (bWidth+20)*self.quArr.count/2+bWidth+20);
 }
 - (void)customerSpeciAction:(UIButton*)sender {
-    
     self.cusav=[[CustomIOS7AlertView alloc]init];
     self.cusav.parentView=self.view;
-    UIView* backView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 280, 200)];
+    self.customerOptions=nil;
+    self.customerOptions=[NSMutableArray array];
+    /**
+     *  增加pagecontrol
+     */
+    _pageControl=[[UIPageControl alloc]init];
+    _pageControl.numberOfPages=[self.quArr count];
+    _pageControl.currentPage=0;
+     _pageControl.userInteractionEnabled=NO;
+    
+    _pageControl.currentPage=sender.tag;
+    /**
+     最外层的scrollView
+     */
+    scrollView_bg=nil;
+    scrollView_bg=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH-20, 200)];
+    scrollView_bg.backgroundColor=[UIColor whiteColor];
+    scrollView_bg.showsHorizontalScrollIndicator=NO;
+    scrollView_bg.showsVerticalScrollIndicator=NO;
+    scrollView_bg.delegate=self;
+    [self.cusav addSubview:_pageControl];
+    NSArray* queArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
+    NSArray* queAnwers=[NSMutableArray arrayWithArray:queArr];
+    for (int k=0; k<queAnwers.count; k++) {
+    UIView* backView=[[UIView alloc]initWithFrame:CGRectMake((DEVICE_WIDTH-20)*k, 0, DEVICE_WIDTH-20, 200)];
     backView.backgroundColor=[UIColor whiteColor];
-        UILabel* titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 280, 40)];
-        NSDictionary* dic=[self.quArr objectAtIndex:sender.tag];
+        UILabel* titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH-20, 40)];
+        NSDictionary* dic=[queAnwers objectAtIndex:k];
         NSString* title=[dic objectForKey:@"ZD_XMMC"];
         titleLabel.text=title;
         titleLabel.textAlignment=NSTextAlignmentCenter;
@@ -512,17 +545,24 @@ static BOOL canSubmit=NO;
         [backView addSubview:titleLabel];
         NSArray* options=[dic objectForKey:@"ST_ARRY"];
         int index=0;
-    
-    UIScrollView* scroll=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 280, 200)];
+    UIScrollView* scroll=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH-20, 200)];
     scroll.showsHorizontalScrollIndicator=NO;
     scroll.showsVerticalScrollIndicator=NO;
     [backView insertSubview:scroll belowSubview:titleLabel];
-    scroll.contentSize=CGSizeMake(280, 40*(options.count/3+2));
+    scroll.contentSize=CGSizeMake(DEVICE_WIDTH-20, 40*(options.count/3+2));
         NSMutableArray* subMArr=[NSMutableArray array];
         for (int i=0; i<options.count; i++) {
             NSMutableDictionary* answer=[NSMutableDictionary dictionary];
              NSDictionary* option=[options objectAtIndex:i];
-            UIView* vi=[[UIView alloc]initWithFrame:CGRectMake(10+i%3*90, 50+i/3*40, 90, 30)];
+            CGRect rect=[[option objectForKey:@"ZM_XMZ"] boundingRectWithSize:CGSizeMake(100, 200) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14.0]} context:nil];
+            CGFloat height=rect.size.height;
+            if (height<40) {
+                height=40;
+                if (height>self.maxHeight) {
+                    self.maxHeight=height;
+                }
+            }
+            UIView* vi=[[UIView alloc]initWithFrame:CGRectMake(5+i%3*90, 50+i/3*self.maxHeight,90, rect.size.height)];
             vi.backgroundColor=[UIColor clearColor];
             vi.tag=i+10;
             UIButton* btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 25, 25)];
@@ -531,10 +571,9 @@ static BOOL canSubmit=NO;
             [btn addTarget:self action:@selector(changeState:) forControlEvents:UIControlEventTouchUpInside];
             btn.tag=vi.tag;
             [vi addSubview:btn];
-            UILabel * label=[[UILabel alloc]initWithFrame:CGRectMake(28, 0, 60, 30)];
+            UILabel * label=[[UILabel alloc]initWithFrame:CGRectMake(28, 0, 60, rect.size.height)];
             label.text=[option objectForKey:@"ZM_XMZ"];
-            
-            
+            label.numberOfLines=0;
             NSArray* keys=self.QAnwsers.allKeys;
            
             BOOL isHave=NO;
@@ -556,7 +595,7 @@ static BOOL canSubmit=NO;
                 if ([[option objectForKey:@"SF_SFXZ"] isEqualToString:@"是"]) {
                     btn.selected=YES;
                     index=i;
-                    NSDictionary* dic=[self.quArr objectAtIndex:sender.tag];
+                    NSDictionary* dic=[self.quArr objectAtIndex:k];
                     NSArray* options=[dic objectForKey:@"ST_ARRY"];
                     NSDictionary* option=[options objectAtIndex:i];
                    
@@ -574,13 +613,13 @@ static BOOL canSubmit=NO;
                     [answer setObject:[option objectForKey:@"ZM_XMZ"] forKey:@"ZM_XMZ"];
                     [answer setObject:[option objectForKey:@"ZM_ZMID"] forKey:@"ZM_ZMID"];
                     NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
-                    NSMutableDictionary* subDic=[subArr objectAtIndex:sender.tag];
+                    NSMutableDictionary* subDic=[subArr objectAtIndex:k];
                     [subMArr addObject:answer];
 //                    [subDic removeObjectForKey:@"KH_KHDA"];
                     [subDic setObject:subMArr forKey:@"KH_KHDA"];
-                    NSLog(@"submitDic:%@",self.submitDic);
+                   
                     canSubmit=YES;
-                    UIButton* btnQ=[self.QBtns objectAtIndex:sender.tag];
+                    UIButton* btnQ=[self.QBtns objectAtIndex:k];
                     btnQ.selected=YES;
                 }
             }
@@ -588,16 +627,26 @@ static BOOL canSubmit=NO;
             [vi addSubview:label];
             [scroll addSubview:vi];
         }
+        backView.tag=k;
     [self.customerOptions addObject:backView];
-    self.cusav.containerView=backView;
+        [scrollView_bg addSubview:backView];
+    }
+    scrollView_bg.contentSize=CGSizeMake((DEVICE_WIDTH-20)*self.quArr.count, 200);
+    scrollView_bg.contentOffset=CGPointMake((DEVICE_WIDTH-20)*sender.tag, 0);
+    scrollView_bg.pagingEnabled=YES;
+//    [bgView insertSubview:scrollView_bg atIndex:0];
+    self.cusav.containerView=scrollView_bg;
+    _pageControl.frame=CGRectMake(0, self.view.frame.size.height-40, DEVICE_WIDTH-20, 20);
     NSArray* titles=@[@"关闭",@"保存"];
     self.cusav.buttonTitles=titles;
     self.cusav.delegate=self;
     self.cusav.tag=sender.tag;
     [self.cusav show];
-
 }
-
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGPoint offset=scrollView.contentOffset;
+    _pageControl.currentPage=(offset.x*2/(DEVICE_WIDTH-20)+1)/2;
+}
 -(void)save{
     BOOL isReady=YES;
     for (UIImageView* bts in self.mustBtns) {
@@ -653,33 +702,35 @@ static BOOL canSubmit=NO;
         CustomerMainManager* manager=[[CustomerMainManager alloc]init];
         [manager persistCustomer:customer1 Questionnaire:self.submitDic CustomerName:customer1.customerName CustomerPhone:customer1.customerPhone ModifyStatu:statu success:^(id data, NSDictionary *userInfo) {
             NSLog(@"data===%@",data);
-            
-            [PYToast showWithText:@"提交成功!"];
-            [Utils hiddenLoading];
-            if ([self.mark isEqualToString:@"create"]) {
-                CustomerKeepDetailController *c =[[CustomerKeepDetailController alloc] initWithNibName:@"CustomerKeepDetailController" bundle:nil];
-                CustomerInfoEntity* entity=[[CustomerInfoEntity alloc]init];
-                entity.customerName=customer1.customerName;
-                entity.customerSex=customer1.sex;
-                entity.visitWay=customer1.visitWay;
-                entity.visitDate=@"";
-                entity.mindLevel=customer1.customerLevel;
-                entity.tradeState=@"";
-                entity.customerType=customer1.customerType;
-                entity.customerId=(NSString*)data;
-                c.entity = entity;
-                c.mark=@"create";
-                c.customerId=(NSString*)data;
-                c.customer=self.customer;
-//                [self goNextController:c];
-//                [self presentViewController:c animated:YES completion:^{
-//                    
-//                }];
-                [self.navigationController pushViewController:c animated:YES];
+            if (data) {
+                [PYToast showWithText:@"提交成功!"];
+                [Utils hiddenLoading];
+                if ([self.mark isEqualToString:@"create"]) {
+                    CustomerKeepDetailController *c =[[CustomerKeepDetailController alloc] initWithNibName:@"CustomerKeepDetailController" bundle:nil];
+                    CustomerInfoEntity* entity=[[CustomerInfoEntity alloc]init];
+                    entity.customerName=customer1.customerName;
+                    entity.customerSex=customer1.sex;
+                    entity.visitWay=customer1.visitWay;
+                    entity.visitDate=@"";
+                    entity.mindLevel=customer1.customerLevel;
+                    entity.tradeState=@"";
+                    entity.customerType=customer1.customerType;
+                    entity.customerId=(NSString*)data;
+                    entity.customerPhone=customer1.customerPhone;
+                    c.entity = entity;
+                    c.mark=@"created";
+                    c.customerId=(NSString*)data;
+                    c.customer=self.customer;
+                    [self.navigationController pushViewController:c animated:YES];
+                }else{
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
             }else{
-                [self.navigationController popViewControllerAnimated:YES];
+                [Utils hiddenLoading];
+                [PYToast showWithText:@"提交失败!"];
+                 [self.navigationController popViewControllerAnimated:YES];
             }
-        } faild:^(id data, NSDictionary *userInfo) {
+                    } faild:^(id data, NSDictionary *userInfo) {
             NSLog(@"faildData===%@",data);
             [Utils hiddenLoading];
             [PYToast showWithText:@"提交失败!"];
@@ -690,8 +741,6 @@ static BOOL canSubmit=NO;
         [al show];
     }
 }
-
-
 -(void)changeState:(UIButton*)btn{
     if (btn.tag%2==0) {
         btn.selected=YES;
@@ -705,88 +754,142 @@ static BOOL canSubmit=NO;
 - (void)customIOS7dialogButtonTouchUpInside:(CustomIOS7AlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
         if (buttonIndex==0) {
+            [self saveInfo];
             [self.cusav close];
         }
         if (buttonIndex==1) {
-            BOOL flag=NO;
-            int index = 0;
-            UIView* view=alertView.containerView;
-            NSArray* arr=view.subviews;
-            NSArray* arr_2;
-            for (id iv in arr) {
-                if ([iv isKindOfClass:[UIScrollView class]]) {
-                    UIView* v=(UIView*)iv;
-                    arr_2=v.subviews;
-                }
-            }
-            NSString* value=@"";
-            NSString* key=@"";
-           
-            NSMutableArray* subMArr=[NSMutableArray array];
-            for (UIView* bv in arr_2) {
-                 NSMutableDictionary* answer=[NSMutableDictionary dictionary];
-                if (bv.tag>=10) {
-                    NSArray* su=bv.subviews;
-                    for (id vi in su) {
-                        if ([vi isKindOfClass:[UIButton class]]) {
-                            UIButton* btn=(UIButton*)vi;
-                            if ([btn isSelected]) {
-                                flag=YES;
-                                index=(int)bv.tag-10;
-                                NSDictionary* dic=[self.quArr objectAtIndex:alertView.tag];
-                                NSArray* options=[dic objectForKey:@"ST_ARRY"];
-                                NSDictionary* option=[options objectAtIndex:index];
-                                NSLog(@"index:%d",index);
-                                key=[dic objectForKey:@"ZD_XMMC"];
-                                if ([value isEqualToString:@""]) {
-                                     value=[value stringByAppendingString:[option objectForKey:@"ZM_XMZ"]];
-                                }else{
-                                    value=[value stringByAppendingString:[NSString stringWithFormat:@",%@",[option objectForKey:@"ZM_XMZ"]]];
-                                }
-                                
-                                if ([self.mark isEqualToString:@"create"]) {
-                                    [answer setObject:self.customer.customerPhone forKey:@"KH_KHDH"];
-                                    [answer setObject:self.customer.customerId forKey:@"KH_KHID"];
-                                    [answer setObject:self.customer.customerName forKey:@"KH_KHMC"];
-                                }else{
-                                    [answer setObject:self.customerInfo.customerPhone forKey:@"KH_KHDH"];
-                                    [answer setObject:self.customerInfo.customerId forKey:@"KH_KHID"];
-                                    [answer setObject:self.customerInfo.customerName forKey:@"KH_KHMC"];
-                                }
-                                [answer setObject:[option objectForKey:@"WY_WYID"] forKey:@"WY_WYID"];
-                                [answer setObject:[option objectForKey:@"ZD_ZDID"] forKey:@"ZD_ZDID"];
-                                [answer setObject:[option objectForKey:@"ZM_ZMID"] forKey:@"ZM_ZMID"];
-                                [answer setObject:[option objectForKey:@"ZM_XMZ"] forKey:@"ZM_XMZ"];
-                                NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
-                                NSMutableDictionary* subDic=[subArr objectAtIndex:alertView.tag];
-                                [subMArr addObject:answer];
-//                                [subDic removeObjectForKey:@"KH_KHDA"];
-                                [subDic setObject:subMArr forKey:@"KH_KHDA"];
-                                NSLog(@"mutableDic:%@",self.submitDic);
-                            }
-                        }
-                    }
-                }
-            }
-            [self.QAnwsers setObject:value forKey:key];
+            [self saveInfo];
             if (flag) {
-                UIButton* btn=[self.QBtns objectAtIndex:alertView.tag];
-                btn.selected=YES;
-                NSArray* arr_views=btn.subviews;
-                for (id vi in arr_views) {
-                    if ([vi isKindOfClass:[UIImageView class]]) {
-                        UIImageView* iv=(UIImageView*)vi;
-                        if (iv.tag==alertView.tag) {
-                             iv.image=[UIImage imageNamed:@"bitian2.png"];
-                        }
-                    }
-                }
-//                UIImageView* iv=[self.mustBtns objectAtIndex:alertView.tag];
-//                 iv.image=[UIImage imageNamed:@"bitian2.png"];
                 [alertView close];
-            }else{
+                [self save];
+            }
+            else{
                 [Utils showAlert:@"请选择试题选项!" title:@"温馨提示"];
             }
         }
+}
+-(void)saveInfo{
+    self.QAnwsers=nil;
+    self.QAnwsers=[NSMutableDictionary dictionary];
+   flag=NO;
+    int index = 0;
+    NSArray* arr;
+    NSArray* arr_2;
+    for (UIView* view in self.customerOptions) {
+        NSString* value=@"";
+        NSString* key=@"";
+        
+        arr=view.subviews;
+        for (id iv in arr) {
+            if ([iv isKindOfClass:[UIScrollView class]]) {
+                UIView* v=(UIView*)iv;
+                arr_2=v.subviews;
+            }
+        }
+        BOOL isEmpty=YES;
+        NSMutableArray* subMArr=[NSMutableArray array];
+        for (UIView* bv in arr_2) {
+            NSMutableDictionary* answer=[NSMutableDictionary dictionary];
+            if (bv.tag>=10) {
+                NSArray* su=bv.subviews;
+                
+                for (id vi in su) {
+                    if ([vi isKindOfClass:[UIButton class]]) {
+                        UIButton* btn=(UIButton*)vi;
+                        if ([btn isSelected]) {
+                            flag=YES;
+                            isEmpty=NO;
+                            /**
+                             *  题目已经选择
+                             */
+                            UIButton* QBbtn=[self.QBtns objectAtIndex:view.tag];
+                            QBbtn.selected=YES;
+                            NSArray* arr_views=QBbtn.subviews;
+                            for (id vie in arr_views) {
+                                if ([vie isKindOfClass:[UIImageView class]]) {
+                                    UIImageView* imv=(UIImageView*)vie;
+                                    if (imv.tag==view.tag) {
+                                        imv.image=[UIImage imageNamed:@"bitian2.png"];
+                                    }
+                                }
+                            }
+                            
+                            index=(int)bv.tag-10;
+                            NSDictionary* dic=[self.quArr objectAtIndex:view.tag];
+                            NSArray* options=[dic objectForKey:@"ST_ARRY"];
+                            NSDictionary* option=[options objectAtIndex:index];
+                           
+                            key=[dic objectForKey:@"ZD_XMMC"];
+                            if ([value isEqualToString:@""]) {
+                                value=[value stringByAppendingString:[option objectForKey:@"ZM_XMZ"]];
+                            }else{
+                                value=[value stringByAppendingString:[NSString stringWithFormat:@",%@",[option objectForKey:@"ZM_XMZ"]]];
+                            }
+                            
+                            if ([self.mark isEqualToString:@"create"]) {
+                                [answer setObject:self.customer.customerPhone forKey:@"KH_KHDH"];
+                                [answer setObject:self.customer.customerId forKey:@"KH_KHID"];
+                                [answer setObject:self.customer.customerName forKey:@"KH_KHMC"];
+                            }else{
+                                [answer setObject:self.customerInfo.customerPhone forKey:@"KH_KHDH"];
+                                [answer setObject:self.customerInfo.customerId forKey:@"KH_KHID"];
+                                [answer setObject:self.customerInfo.customerName forKey:@"KH_KHMC"];
+                            }
+                            [answer setObject:[option objectForKey:@"WY_WYID"] forKey:@"WY_WYID"];
+                            [answer setObject:[option objectForKey:@"ZD_ZDID"] forKey:@"ZD_ZDID"];
+                            [answer setObject:[option objectForKey:@"ZM_ZMID"] forKey:@"ZM_ZMID"];
+                            [answer setObject:[option objectForKey:@"ZM_XMZ"] forKey:@"ZM_XMZ"];
+                            NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
+                            NSMutableDictionary* subDic=[subArr objectAtIndex:view.tag];
+                            [subMArr addObject:answer];
+                            //                                [subDic removeObjectForKey:@"KH_KHDA"];
+                            [subDic setObject:subMArr forKey:@"KH_KHDA"];
+                            NSLog(@"mutableDic:%@",self.submitDic);
+                        }
+                        else{
+//                             [self.QAnwsers setObject:value forKey:key];
+                            index=(int)bv.tag-10;
+                            NSDictionary* dic=[self.quArr objectAtIndex:view.tag];
+//                            NSArray* options=[dic objectForKey:@"ST_ARRY"];
+//                            NSDictionary* option=[options objectAtIndex:index];
+//                            NSLog(@"index:%d",index);
+                            key=[dic objectForKey:@"ZD_XMMC"];
+
+
+                            if ([self.mark isEqualToString:@"create"]) {
+                                [answer removeObjectForKey:@"KH_KHDH"];
+                                [answer removeObjectForKey:@"KH_KHID"];
+                                [answer removeObjectForKey:@"KH_KHMC"];
+                            }else{
+                                [answer removeObjectForKey:@"KH_KHDH"];
+                                [answer removeObjectForKey:@"KH_KHID"];
+                                [answer removeObjectForKey:@"KH_KHMC"];
+                            }
+                            [answer removeObjectForKey:@"WY_WYID"];
+                            [answer removeObjectForKey:@"ZD_ZDID"];
+                            [answer removeObjectForKey:@"ZM_ZMID"];
+                            [answer removeObjectForKey:@"ZM_XMZ"];
+                            NSArray* subArr=[self.submitDic objectForKey:@"TC_WJST_ARRY"];
+                            NSMutableDictionary* subDic=[subArr objectAtIndex:view.tag];
+                            [subMArr addObject:answer];
+                            //                                [subDic removeObjectForKey:@"KH_KHDA"];
+                            [subDic setObject:subMArr forKey:@"KH_KHDA"];
+                        }
+                    }
+                }
+               
+            }
+        }
+        if (isEmpty) {
+            UIButton* QBbtn=[self.QBtns objectAtIndex:view.tag];
+            QBbtn.selected=NO;
+        }
+//        if (value.length>0) {
+//             [self.QAnwsers setObject:value forKey:key];
+//        }else{
+//             [self.QAnwsers removeObjectForKey:key];
+//        }
+       [self.QAnwsers setObject:value forKey:key];
+    }
 }
 @end

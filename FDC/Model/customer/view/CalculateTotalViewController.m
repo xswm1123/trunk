@@ -20,6 +20,10 @@
     self.discount.text=self.discountCount;
     self.acturllyPay.text=self.actCount;
     self.firstPay.text=[NSString stringWithFormat:@"%@万",self.firstCount];
+    if ([self.firstCount isEqualToString:@"0"]) {
+        self.lb_firstPay.hidden=YES;
+        self.firstPay.hidden=YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

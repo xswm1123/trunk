@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *discount;
 @property (weak, nonatomic) IBOutlet UILabel *acturllyPay;
 @property (weak, nonatomic) IBOutlet UILabel *firstPay;
+@property (weak, nonatomic) IBOutlet UILabel *lb_firstPay;
 @property (nonatomic,strong) NSString* sholudPay;
 @property (nonatomic,strong) NSString* discountCount;
 @property (nonatomic,strong) NSString* actCount;
