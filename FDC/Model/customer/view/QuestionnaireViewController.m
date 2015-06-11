@@ -883,6 +883,15 @@ static BOOL canSubmit=NO;
         if (isEmpty) {
             UIButton* QBbtn=[self.QBtns objectAtIndex:view.tag];
             QBbtn.selected=NO;
+            NSArray* arr_views=QBbtn.subviews;
+            for (id vie in arr_views) {
+                if ([vie isKindOfClass:[UIImageView class]]) {
+                    UIImageView* imv=(UIImageView*)vie;
+                    if (imv.tag==view.tag) {
+                        imv.image=[UIImage imageNamed:@"bitian.png"];
+                    }
+                }
+            }
         }
 //        if (value.length>0) {
 //             [self.QAnwsers setObject:value forKey:key];
